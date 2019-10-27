@@ -110,6 +110,3 @@ test5 = paintChars flags 60
 test6 = paintChars diags 60
 test7 = paintChars circle 60
 test8 = paintChars circles 60
-
---29
---22
