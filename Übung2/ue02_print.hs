@@ -10,13 +10,14 @@ sumOfTeiler n a b
 
 --Aufgabe 3
 -- Wir lassen die Signatur weg, weil Haskell sonst immer meckert
+factorial:: Double -> Double
 factorial n
         | n == 0 = 1
         | n > 0 = n * factorial(n-1)
         | n < 0 = error "not defined for negative numbers"
 
 
-euler :: Float -> Float
+euler :: Double -> Double  --Sonst ist der Zahlenbereich zu klein 
 euler n 
        | n == 0 = 1
        | otherwise = (1 / factorial(n)) + euler(n-1)
