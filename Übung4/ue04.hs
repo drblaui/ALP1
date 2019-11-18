@@ -45,10 +45,10 @@ maxProdOf k (x:xs) = maxProdOfHelper k x xs 0 []
 maxProdOfHelper :: Int -> Int -> [Int] -> Int -> [Int] -> [Int]
 maxProdOfHelper k x [] max xs = xs
 maxProdOfHelper k x (y:xs) max maxNum
-                        | (p > max) = maxProdOfHelper k y xs p ([x] ++ splitList ([y] ++ xs) (k-1))
-                        | ((p < max) || (p == max)) = maxProdOfHelper k y xs max maxNum
-                        where
-                            p = (x * prod (splitList ([y]++xs) (k-1)))
+        | (p > max) = maxProdOfHelper k y xs p ([x] ++ splitList ([y] ++ xs) (k-1))
+        | ((p < max) || (p == max)) = maxProdOfHelper k y xs max maxNum
+        where
+            p = (x * prod (splitList ([y]++xs) (k-1)))
 
 
 --Aufgabe 3
@@ -70,4 +70,6 @@ perfects n = [a| a <- [1..(n-1)], summ(trueDivisor a) == 2*a]
 
 
 -- Aufgabe 5
---Fuck
+counts :: (Num a, Eq b) => b -> [b] -> a
+-- This spits an error without the fromIntegral
+counts x xs = fromIntegral(length(filter (==x) xs))
