@@ -13,6 +13,13 @@ splitList (x:xs) offset = x:splitList xs (offset - 1)
 summ :: (Num a) => [a] -> a
 summ = foldr (+) 0
 
+-- This is elem a [a]
+existIn :: Eq a => a -> [a] -> Bool
+existIn x [] = False
+existIn x (y:xs)
+        | (x == y) = True
+        | otherwise = existIn x (xs)
+
 --Aufgabe 1
 {-
  [(n,m) | n <- [1..3], m <- [3,2..0], n /= m]
@@ -157,3 +164,4 @@ least significant bit, wich is normally on the right
 -}
 bin2dec :: [Integer] -> Integer
 bin2dec = foldr (\x y -> x + 2*y) 0
+
