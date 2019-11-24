@@ -64,12 +64,17 @@ maxProdOfHelper k x (y:xs) max maxNum
 
 
 --Aufgabe 3
---m bleibt für b weg
 primes :: Int -> [Int]
 primes n = takeWhile (<n) (sieb [2..])
             where
                 sieb (l:xs) = l:sieb [x | x <- xs, mod x l /= 0]
 
+{-
+List comprehension. We take three numbers from the array
+that primes gives us and add them up. If they create our number, 
+we put them in our array we also added two checks, so we don't get
+variants that are the same as other ones but sortet different 
+-}
 weakGoldbachTriples :: Int -> [(Int,Int,Int)]
 weakGoldbachTriples n 
     | (n `mod` 2 == 0) = error ("Input has to be an odd number")
@@ -87,6 +92,7 @@ wGUHelper :: Int -> Int -> Bool
 wGUHelper m n 
     | (n >= m) = True
     -- This is an anonymous function or a lamda expression. I use it, since it will come up in the lecture anyways
+    --This expression loops through all items of the list and adds the values in the triples and creates a list of True or False
     | not(existIn False (map (\(x,y,z) -> ((x+y+z) == n)) (weakGoldbachTriples n))) = wGUHelper m (n+2)
     | otherwise = False
 
