@@ -73,7 +73,23 @@ primes n = takeWhile (<n) (sieb [2..])
 weakGoldbachTriples :: Int -> [(Int,Int,Int)]
 weakGoldbachTriples n 
     | (n `mod` 2 == 0) = error ("Input has to be an odd number")
-    | otherwise = [(x,y,z) | x <- (primes n), y <- primes n, z <- primes n, (x+y+z == n)]
+    | otherwise = [(x,y,z) | x <- (primes n), y <- primes n, z <- primes n, (x+y+z == n), x <= y, y <= z]
+
+
+{-
+Since weak goldbach triples are only allowed with odd numbers(at least
+the assignment says so), we only take the odd numbers until our m
+-}
+wGTriplesUntil :: Int -> Bool
+wGTriplesUntil m = wGUHelper m 1
+
+wGUHelper :: Int -> Int -> Bool
+wGUHelper m n 
+    | (n >= m) = True
+    -- This is an anonymous function or a lamda expression. I use it, since it will come up in the lecture anyways
+    | not(existIn False (map (\(x,y,z) -> ((x+y+z) == n)) (weakGoldbachTriples n))) = wGUHelper m (n+2)
+    | otherwise = False
+
 
 --Aufgabe 4
 --stolen and modified from my own Assignment 02
