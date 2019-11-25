@@ -52,3 +52,28 @@ russMult :: Integer -> Integer -> Integer
 russMult n 0 = 0 -- O(1)
 russMult n m | (mod m 2) == 0 = russMult (n+n) (div m 2)
              | otherwise = russMult (n+n) (div m 2) + n -- O(n)?
+
+--Aufgabe 5
+allSuffixes :: Ord a => [a] -> [[a]]
+allSuffixes [] = []
+allSuffixes (x:xs) = [x:xs] ++ allSuffixes xs
+
+prefix :: Ord a => [a] -> [a] -> [a]
+prefix [] [] = []
+prefix _ [] = []
+prefix [] _ = []
+prefix (x:xs) (y:ys) 
+    | (x == y) = [x] ++ prefix xs ys
+    | otherwise = []
+
+largestPrefix :: Ord a => [[a]] -> (Int, [a])
+largestPrefix [[]] = (0,[])
+largestPrefix (x:y:xs) = lPHelper x y xs [] 0
+
+lPHelper :: Ord a => [a] -> [a] -> [[a]] -> [a] -> Int -> (Int, [a])
+lPHelper x y [] max len 
+        | (length(prefix x y) > len) = ((length(prefix x y), (prefix x y)))
+        | otherwise = (len, max)
+lPHelper x y (z:a:xs) max len
+        | (length (prefix x y) > len) = lPHelper z a xs (prefix x y) (length(prefix x y))
+        | otherwise = lPHelper z a xs max len
