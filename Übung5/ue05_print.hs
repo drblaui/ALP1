@@ -39,3 +39,16 @@ isSorted cmp xs = and(zipWith cmp xs (tail xs))
  Also: T(n) = O(n²)
 -}
 
+--Aufgabe 3
+mult :: Integer -> Integer -> Integer
+mult n 0 = 0 -- O(1)
+mult n m = mult n (m-1) + n -- O(n)
+{-
+ T(n) = O(n), da mult n mal rekursiv aufgerufen wird und sowohl (m-1) als auch + n
+ konstante Zeit brauchen 
+-}
+
+russMult :: Integer -> Integer -> Integer
+russMult n 0 = 0 -- O(1)
+russMult n m | (mod m 2) == 0 = russMult (n+n) (div m 2)
+             | otherwise = russMult (n+n) (div m 2) + n -- O(n)?
