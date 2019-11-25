@@ -3,7 +3,7 @@ selectSort :: Ord a => (a -> a -> Bool) -> [a] -> [a]
 selectSort op [x] = [x] -- O(1)
 selectSort op xs = calculateFirst op xs:selectSort op (deleteElem (calculateFirst op xs) xs) -- T(n) = n * n * n = n³
 {-
-T(n³) = O(n³), da sowohl calculateFirst, als auch delete Elem
+T(n) = O(n³), da sowohl calculateFirst, als auch delete Elem
 und selectSort an sich zum berechnen jeweils lineare Wachstumsgeschwindigkeit,
 also n rekursive Aufrufe haben.
 -}
@@ -25,3 +25,17 @@ deleteElem x (y:ys)
 T(n) = O(n), da unsere Rekursion n mal aufgerufen wir und
 _ [] = [] konstante Zeit braucht
 -}
+
+--Aufgabe 2
+isSorted :: (Ord a) => (a -> a -> Bool) -> [a] -> Bool
+isSorted cmp xs = and(zipWith cmp xs (tail xs))
+{-
+ tail xs müsste mit O(1) laufen, da es immer nur das erste Element entfernt
+ zipWith cmp xs (tail xs) müsste mit O(n) laufen, da es nur n Elemente miteinander
+ verbindet
+ and(zipWith cmp xs (tail xs)) müsste mit O(n²) laufen, da zipWith n mal aufgerufen
+ wird und and selbst auch n mal durch die Liste iteriert.
+ 
+ Also: T(n) = O(n²)
+-}
+
