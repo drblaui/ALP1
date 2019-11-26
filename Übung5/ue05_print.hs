@@ -1,4 +1,5 @@
 -- Aufgabe 1
+--TODO: Check if number comes up two times
 selectSort :: Ord a => (a -> a -> Bool) -> [a] -> [a]
 selectSort op [x] = [x] -- O(1)
 selectSort op xs = calculateFirst op xs:selectSort op (deleteElem (calculateFirst op xs) xs) -- T(n) = n * n * n = n³
