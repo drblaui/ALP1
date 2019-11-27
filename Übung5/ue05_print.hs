@@ -1,11 +1,13 @@
 -- Aufgabe 1
 selectSort :: Ord a => (a -> a -> Bool) -> [a] -> [a]
 selectSort op [x] = [x] -- O(1)
-selectSort op xs = calculateFirst op xs:selectSort op (deleteElem (calculateFirst op xs) xs) -- T(n) = n * n * n = n³
+selectSort op xs = calculateFirst op xs:selectSort op (deleteElem (calculateFirst op xs) xs) -- T(n) = n * n * n = O(n³)
 {-
 T(n) = O(n³), da sowohl calculateFirst, als auch delete Elem
 und selectSort an sich zum berechnen jeweils lineare Wachstumsgeschwindigkeit,
 also n rekursive Aufrufe haben.
+Ich weiß, dass das unglaublich ineffizient ist, aber wir sollen ja
+NOCH keine effizienten Algorithmen bauen
 -}
 
 calculateFirst :: Ord a => (a -> a -> Bool) -> [a] -> a
@@ -50,30 +52,58 @@ mult n m = mult n (m-1) + n -- O(n)
 
 russMult :: Integer -> Integer -> Integer
 russMult n 0 = 0 -- O(1)
-russMult n m | (mod m 2) == 0 = russMult (n+n) (div m 2)
-             | otherwise = russMult (n+n) (div m 2) + n -- O(n)?
+russMult n m | (mod m 2) == 0 = russMult (n+n) (div m 2) -- O(n)
+             | otherwise = russMult (n+n) (div m 2) + n -- O(n)
+
+
+-- Aufgabe 4
+bubbleSort :: Ord a => [a] -> [a]
+bubbleSort xs | isSorted (<=) xs = xs -- O(n²)
+              | otherwise = bubbleSort (moveBubble xs) -- n * n = O(n²)
+              where
+                moveBubble [] = [] -- O(1)
+                moveBubble [x] = [x] -- O(1)
+                moveBubble (x:y:rest) | (<=) x y = x:moveBubble (y:rest) -- O(n)
+                                      | otherwise = y:moveBubble (x:rest)-- O(n)
+
+{-
+ n² + n² + 1 + 1 + n + n = O(n²) für Listen der Länge n im Worst Case
+-}
+
+traceBubbleSort :: Ord a => [a] -> [[a]]
+traceBubbleSort xs | isSorted (<=) xs = [xs]
+                   | otherwise = traceBubbleSort(moveBubble xs)
+                   where
+                    moveBubble [] = []
+                    moveBubble [x] = [x]
+                    moveBubble (x:y:xs) | (<=) x y = x:moveBubble (y:xs)
+                                        | otherwise = y:moveBubble (x:xs)
 
 --Aufgabe 5
 allSuffixes :: Ord a => [a] -> [[a]]
-allSuffixes [] = []
-allSuffixes (x:xs) = [x:xs] ++ allSuffixes xs
+allSuffixes [] = [] -- O(1)
+allSuffixes (x:xs) = [x:xs] ++ allSuffixes xs --O(n)
+--O(n)
 
 prefix :: Ord a => [a] -> [a] -> [a]
-prefix [] [] = []
-prefix _ [] = []
-prefix [] _ = []
+prefix [] [] = [] -- O(1)
+prefix _ [] = [] -- O(1)
+prefix [] _ = [] -- O(1)
 prefix (x:xs) (y:ys) 
-    | (x == y) = [x] ++ prefix xs ys
-    | otherwise = []
+    | (x == y) = [x] ++ prefix xs ys -- O(n)
+    | otherwise = [] -- O(1)
+-- O(n)
 
 largestPrefix :: Ord a => [[a]] -> (Int, [a])
-largestPrefix [[]] = (0,[])
-largestPrefix (x:y:xs) = lPHelper x y xs [] 0
+largestPrefix [[]] = (0,[]) -- O(1)
+largestPrefix (x:y:xs) = lPHelper x y xs [] 0 -- ?????
 
 lPHelper :: Ord a => [a] -> [a] -> [[a]] -> [a] -> Int -> (Int, [a])
 lPHelper x y [] max len 
-        | (length(prefix x y) > len) = ((length(prefix x y), (prefix x y)))
-        | otherwise = (len, max)
+        | (length(prefix x y) > len) = ((length(prefix x y), (prefix x y))) -- 1 * n * 1 * n * n = O(n³) ?????
+        | otherwise = (len, max) --O(1)
 lPHelper x y (z:a:xs) max len
         | (length (prefix x y) > len) = lPHelper z a xs (prefix x y) (length(prefix x y))
         | otherwise = lPHelper z a xs max len
+
+-- Length sollte O(1) brauchen, wegen dem Faltungsoperator??
