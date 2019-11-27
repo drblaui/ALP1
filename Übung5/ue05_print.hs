@@ -1,5 +1,4 @@
 -- Aufgabe 1
---TODO: Check if number comes up two times
 selectSort :: Ord a => (a -> a -> Bool) -> [a] -> [a]
 selectSort op [x] = [x] -- O(1)
 selectSort op xs = calculateFirst op xs:selectSort op (deleteElem (calculateFirst op xs) xs) -- T(n) = n * n * n = n³
@@ -20,7 +19,7 @@ _ [x] = x konstante Zeit braucht
 deleteElem :: Eq a => a -> [a] -> [a]
 deleteElem _ [] = [] -- O(1)
 deleteElem x (y:ys) 
-    | x == y = deleteElem x ys
+    | x == y = ys
     | otherwise = y : deleteElem x ys -- O(n)
 {-
 T(n) = O(n), da unsere Rekursion n mal aufgerufen wir und
