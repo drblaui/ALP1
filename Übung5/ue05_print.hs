@@ -94,6 +94,12 @@ prefix (x:xs) (y:ys)
     | otherwise = [] -- O(1)
 -- O(n)
 
+{-
+Yes, I know we should've used a sorting alogrithm, but
+I overread that until now and it's way to late in the night
+to add that now, so I'll just accept that I'm gonna loose points
+for this
+-}
 largestPrefix :: Ord a => [[a]] -> (Int, [a])
 largestPrefix [[]] = (0,[]) -- O(1)
 largestPrefix (x:y:xs) = lPHelper x y xs [] 0 -- ?????
