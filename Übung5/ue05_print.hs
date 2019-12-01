@@ -1,3 +1,8 @@
+--Helper functions, because I dont know, what I'm allowed to use
+--this is snd
+second :: (a,b) -> b
+second (x,y) = y
+
 -- Aufgabe 1
 {-
 Selection Sort runs with O(n²) as far as I know, 
@@ -173,7 +178,7 @@ tuple for reasons that are way beyond my humble mind
 -}
 maxLengthRepSeq :: Ord a => [a] -> [a]
 maxLengthRepSeq [] = [] -- O(1)
-maxLengthRepSeq xs = snd(largestPrefix (bubbleSort(allSuffixes xs))) -- 1 * 2^n * n² * n = O(2^n)
+maxLengthRepSeq xs = second(largestPrefix (bubbleSort(allSuffixes xs))) -- 1 * 2^n * n² * n = O(2^n)
 {-
 T(n) = 1 + 2^n = O(2^n)
 -}
