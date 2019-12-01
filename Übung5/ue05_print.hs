@@ -72,7 +72,7 @@ bubbleSort xs | isSorted (<=) xs = xs -- O(n²)
 
 traceBubbleSort :: Ord a => [a] -> [[a]]
 traceBubbleSort xs | isSorted (<=) xs = [xs]
-                   | otherwise = traceBubbleSort(moveBubble xs)
+                   | otherwise = traceBubbleSort(moveBubble xs) ++ [xs]
                    where
                     moveBubble [] = []
                     moveBubble [x] = [x]
@@ -98,7 +98,8 @@ prefix (x:xs) (y:ys)
 Yes, I know we should've used a sorting alogrithm, but
 I overread that until now and it's way to late in the night
 to add that now, so I'll just accept that I'm gonna loose points
-for this
+for this. And yes, this is like a thousand times worse than
+in terms of compexity than it has to be
 -}
 largestPrefix :: Ord a => [[a]] -> (Int, [a])
 largestPrefix [[]] = (0,[]) -- O(1)
@@ -109,7 +110,7 @@ lPHelper x y [] max len
         | (length(prefix x y) > len) = ((length(prefix x y), (prefix x y))) -- 1 * n * 1 * n * n = O(n³) ?????
         | otherwise = (len, max) --O(1)
 lPHelper x y (z:a:xs) max len
-        | (length (prefix x y) > len) = lPHelper z a xs (prefix x y) (length(prefix x y))
+        | (length (prefix x y) > len) = lPHelper z a xs (prefix x y) (length(prefix x y)) -- 1*n * n * n * 1 * n = O(n⁴)??
         | otherwise = lPHelper z a xs max len
 
 -- Length sollte O(1) brauchen, wegen dem Faltungsoperator??
