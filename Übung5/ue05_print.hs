@@ -1,9 +1,11 @@
 -- Aufgabe 1
 selectSort :: Ord a => (a -> a -> Bool) -> [a] -> [a]
 selectSort op [x] = [x] -- O(1)
-selectSort op xs = calculateFirst op xs:selectSort op (deleteElem (calculateFirst op xs) xs) -- T(n) = n * n * n = O(n³)
+selectSort op xs = first:selectSort op (deleteElem (first) xs) -- T(n) = n * n * n = O(n³)
+            where
+                first = calculateFirst op xs -- O(n)
 {-
-T(n) = O(n³), da sowohl calculateFirst, als auch delete Elem
+T(n) = 1 + n³ = O(n³), da sowohl calculateFirst, als auch delete Elem
 und selectSort an sich zum berechnen jeweils lineare Wachstumsgeschwindigkeit,
 also n rekursive Aufrufe haben.
 Ich weiß, dass das unglaublich ineffizient ist, aber wir sollen ja
@@ -14,18 +16,18 @@ calculateFirst :: Ord a => (a -> a -> Bool) -> [a] -> a
 calculateFirst _ [x] = x -- O(1)
 calculateFirst op (x:y:xs) = calculateFirst op ((if (op x y) then x else y):xs) -- O(n)
 {-
-T(n) = O(n), da unsere Rekursion n mal aufgerufen wird und 
+T(n) = 1 + n = O(n), da unsere Rekursion n mal aufgerufen wird und 
 _ [x] = x konstante Zeit braucht
 -}
 
 deleteElem :: Eq a => a -> [a] -> [a]
 deleteElem _ [] = [] -- O(1)
 deleteElem x (y:ys) 
-    | x == y = ys
+    | x == y = ys -- O(1)
     | otherwise = y : deleteElem x ys -- O(n)
 {-
-T(n) = O(n), da unsere Rekursion n mal aufgerufen wir und
-_ [] = [] konstante Zeit braucht
+T(n) = 1 + 1 + n = O(n), da unsere Rekursion n mal aufgerufen wir und
+_ [] = [] und x == y = ys konstante Zeit braucht
 -}
 
 --Aufgabe 2
@@ -38,7 +40,7 @@ isSorted cmp xs = and(zipWith cmp xs (tail xs))
  and(zipWith cmp xs (tail xs)) müsste mit O(n²) laufen, da zipWith n mal aufgerufen
  wird und and selbst auch n mal durch die Liste iteriert.
  
- Also: T(n) = O(n²)
+ Also: T(n) = 1 * n * n = O(n²)
 -}
 
 --Aufgabe 3
@@ -46,7 +48,7 @@ mult :: Integer -> Integer -> Integer
 mult n 0 = 0 -- O(1)
 mult n m = mult n (m-1) + n -- O(n)
 {-
- T(n) = O(n), da mult n mal rekursiv aufgerufen wird und sowohl (m-1) als auch + n
+ T(n) = 1 + n = O(n), da mult n mal rekursiv aufgerufen wird und sowohl (m-1) als auch + n
  konstante Zeit brauchen 
 -}
 
@@ -54,7 +56,9 @@ russMult :: Integer -> Integer -> Integer
 russMult n 0 = 0 -- O(1)
 russMult n m | (mod m 2) == 0 = russMult (n+n) (div m 2) -- O(n)
              | otherwise = russMult (n+n) (div m 2) + n -- O(n)
-
+{-
+T(n) = 1 + n + n = 1 + 2*n = O(n)
+-}
 
 -- Aufgabe 4
 bubbleSort :: Ord a => [a] -> [a]
@@ -79,6 +83,7 @@ traceBubbleSort xs | isSorted (<=) xs = [xs]
                     moveBubble (x:y:xs) | (<=) x y = x:moveBubble (y:xs)
                                         | otherwise = y:moveBubble (x:xs)
 
+
 --Aufgabe 5
 allSuffixes :: Ord a => [a] -> [[a]]
 allSuffixes [] = [] -- O(1)
@@ -94,23 +99,28 @@ prefix (x:xs) (y:ys)
     | otherwise = [] -- O(1)
 -- O(n)
 
-{-
-Yes, I know we should've used a sorting alogrithm, but
-I overread that until now and it's way to late in the night
-to add that now, so I'll just accept that I'm gonna loose points
-for this. And yes, this is like a thousand times worse than
-in terms of compexity than it has to be
--}
+
 largestPrefix :: Ord a => [[a]] -> (Int, [a])
 largestPrefix [[]] = (0,[]) -- O(1)
-largestPrefix (x:y:xs) = lPHelper x y xs [] 0 -- ?????
+largestPrefix (x:y:xs) = lPHelper x y xs [] 0 -- O(2^n)
+{-
+T(n) = 1 + 2^n = O(2^n)
+-}
 
 lPHelper :: Ord a => [a] -> [a] -> [[a]] -> [a] -> Int -> (Int, [a])
 lPHelper x y [] max len 
-        | (length(prefix x y) > len) = ((length(prefix x y), (prefix x y))) -- 1 * n * 1 * n * n = O(n³) ?????
+        | (length(prefix x y) > len) = ((length(prefix x y), (prefix x y))) -- 1 * n * 1 * n * n = O(n³)
         | otherwise = (len, max) --O(1)
-lPHelper x y (z:a:xs) max len
-        | (length (prefix x y) > len) = lPHelper z a xs (prefix x y) (length(prefix x y)) -- 1*n * n * n * 1 * n = O(n⁴)??
-        | otherwise = lPHelper z a xs max len
+lPHelper x y (z:xs) max len
+        | (length (prefix x y) > len) = lPHelper y z xs (prefix x y) (length(prefix x y)) -- 1*n * n * n * 1 * n = O(n⁴)
+        | otherwise = lPHelper y z xs max len -- O(n)
+{-
+T(n) = n³ + n⁴ + n = O(2^n), either I miscalculated extremely or I write actually inefficient
+-}
 
--- Length sollte O(1) brauchen, wegen dem Faltungsoperator??
+maxLengthRepSeq :: Ord a => [a] -> [a]
+maxLengthRepSeq [] = [] -- O(1)
+maxLengthRepSeq xs = snd(largestPrefix (bubbleSort(allSuffixes xs))) -- 1 * 2^n * n² * n = O(2^n)
+{-
+T(n) = 1 + 2^n = O(2^n)
+-}
