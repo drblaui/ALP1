@@ -59,3 +59,23 @@ data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
 
 postOrder :: (Ord a) => BSearchTree a -> [a]         
 postOrder (Node x xl xr) = postOrder xl ++ postOrder xr ++ [x]
+
+-- 5. Aufgabe
+--a
+data Queue a = Queue [a] deriving (Eq, Show)
+
+enqueue :: a -> Queue a -> Queue a
+enqueue x (Queue xs) = Queue (xs ++ [x])
+
+dequeue :: (Eq a) => Queue a -> (a, Queue a)
+dequeue (Queue xs) 
+            | isEmpty(Queue xs) = error "Cant remove Element of Empty List"
+            | otherwise = (head xs, Queue $ tail xs)
+
+isEmpty :: (Eq a) => Queue a -> Bool
+isEmpty (Queue xs) 
+            | (xs == []) = True
+            | otherwise = False
+
+makeQueue :: Queue a
+makeQueue = Queue []
