@@ -95,3 +95,7 @@ makeQueue = Empty
 showQueue :: (Show a) => Queue a -> String
 showQueue (Queue [x]) = show x
 showQueue (Queue (x:xs)) = show x ++ ", " ++ showQueue (Queue xs)
+
+{-
+If I kill myself, see this as my suicide note
+-}
