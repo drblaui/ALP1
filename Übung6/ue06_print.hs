@@ -1,4 +1,5 @@
 {-# LANGUAGE NPlusKPatterns #-}
+import SimpleBT
 -- 1. Aufgabe
 data Length = Foot Double | Centimeter Double 
             | Yard Double | Kilometer Double 
@@ -42,29 +43,41 @@ weekDay day month year
 dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] 
 
 -- 3. Aufgabe
-data SimpleBT = L | N SimpleBT SimpleBT deriving (Eq, Show)
 
-type Height = Integer
-
-genSimpleBT :: Height -> SimpleBT
-genSimpleBT 0 = L
-genSimpleBT (n+1) = N (genSimpleBT n) (genSimpleBT n)
+insertLeaves :: Integer -> SimpleBT -> SimpleBT
+insertLeaves 0 tree = tree
+insertLeaves n (N L rTree) = N (N L L) (insertLeaves (n-1) rTree)
+insertLeaves n L = N L L 
+insertLeaves n (N lTree rTree) = N (insertLeaves n lTree) (insertLeaves n rTree)
 
 -- tree = genSimpleBT 3 -> N (N (N L L) (N L L)) (N (N L L) (N L L))
 -- insertLeaves 2 tree -> N (N (N (N L L) (N L L)) (N L L)) (N (N L L) (N L L))
+-- 
 
 -- 4. Aufgabe
 data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
                     deriving (Show, Eq)
 
-postOrder :: (Ord a) => BSearchTree a -> [a]         
-postOrder (Node x xl xr) = postOrder xl ++ postOrder xr ++ [x]
+insert :: (Ord a) => a -> BSearchTree a -> BSearchTree a
+insert k Nil = Node k Nil Nil
+insert k (Node x ltree rtree)
+                | k < x = Node x (insert k ltree) rtree
+                | otherwise = Node x ltree (insert k rtree)
+    
+list2Tree :: (Ord a) => [a] -> BSearchTree a
+list2Tree [] = Nil
+list2Tree (x:xs) = insert x (list2Tree xs)
+
+postOrder :: (Ord a) => BSearchTree a -> [a]       
+postOrder Nil = []  
+postOrder (Node x ltree rtree) = postOrder ltree ++ postOrder rtree ++ [x]
 
 -- 5. Aufgabe
 --a
-data Queue a = Queue [a] deriving (Eq, Show)
+data Queue a = Empty | Queue [a] deriving (Eq, Show)
 
 enqueue :: a -> Queue a -> Queue a
+enqueue x Empty = Queue ([x])
 enqueue x (Queue xs) = Queue (xs ++ [x])
 
 dequeue :: (Eq a) => Queue a -> (a, Queue a)
@@ -73,9 +86,12 @@ dequeue (Queue xs)
             | otherwise = (head xs, Queue $ tail xs)
 
 isEmpty :: (Eq a) => Queue a -> Bool
-isEmpty (Queue xs) 
-            | (xs == []) = True
-            | otherwise = False
+isEmpty Empty = False
+isEmpty (Queue xs) = True
 
 makeQueue :: Queue a
-makeQueue = Queue []
+makeQueue = Empty
+
+showQueue :: (Show a) => Queue a -> String
+showQueue (Queue [x]) = show x
+showQueue (Queue (x:xs)) = show x ++ ", " ++ showQueue (Queue xs)
