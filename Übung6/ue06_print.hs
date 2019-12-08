@@ -1,5 +1,4 @@
 {-# LANGUAGE NPlusKPatterns #-}
-import SimpleBT
 -- 1. Aufgabe
 data Length = Foot Double | Centimeter Double 
             | Yard Double | Kilometer Double 
@@ -21,15 +20,18 @@ mile2km (Mile mi) = Kilometer (mi / 0.62137)
 
 
 -- 2. Aufgabe
-data Weekday = Mo | Tu | We | Th | Fr | Sa | Su
+data Weekday =  Sunday | Monday | Tuesday | Wednesday 
+            | Thursday | Friday | Saturday
             deriving (Eq, Ord, Show, Enum)
---Aufgabe sagt literally NICHTS AUS FRAU ESPONDA ICH HASSE MEIN LEBEN
+
+type Date = (Int, Int, Int)
+
 leap_year :: Int -> Bool
 leap_year y = ((mod y 4) == 0) && (((mod y 100) /= 0) || (mod y 400) == 0)
 
-weekDay :: Int -> Int -> Int -> String
-weekDay day month year
-    | checkArgs day month year = dayNames !! (mod (day + x + (31 * m0) `div` 12) 7)
+weekDay :: Date -> Weekday
+weekDay (day,month,year)
+    | checkArgs day month year = [Sunday .. Saturday] !! (mod (day + x + (31 * m0) `div` 12) 7)
     | otherwise = error "One of the arguments is not a valid date value"
         where
             y0 = year - ((14 - month) `div` 12)
@@ -40,19 +42,112 @@ weekDay day month year
                 | elem m [4,6,9,11] = d < 31 && d > 0 && y > 0
                 | (m == 2) = (((leap_year y) && d < 30) || d < 29) && d > 0 && y > 0
                 | otherwise = False
-dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] 
 
 -- 3. Aufgabe
+{-- simple trees (algebraic data type explained in the lecture) --}
+{-- Author: M. Esponda --}
+
+data SimpleBT = L | N SimpleBT SimpleBT  deriving Show
+
+type Height = Integer
+
+genSimpleBT :: Height -> SimpleBT
+genSimpleBT   0  =  L
+genSimpleBT (n+1) = N (genSimpleBT n) (genSimpleBT n)
+
+nodes :: SimpleBT -> Integer
+nodes L = 1
+nodes (N leftT rightT) = 1 + nodes leftT + nodes rightT
+
+height :: SimpleBT -> Integer
+height L = 0
+height (N lt rt) = (max (height lt) (height rt)) + 1
+
+joinTrees :: SimpleBT -> SimpleBT -> SimpleBT
+joinTrees leftTree rightTree = N leftTree rightTree
+
+balanced :: SimpleBT -> Bool
+balanced  L = True
+balanced  (N lt rt) = (balanced lt) && (balanced rt) && height lt == height rt
+
+{- The following functions visualize the simple binary trees (SimpleBT)
+   you are not supposed to understand the semantics of the functions.
+   There are many details, which are not relevant for the lecture understanding.
+-}
+   
+{- node = "N" + "|" (below it)
+   horizontal line = "---" between the subtrees
+-}
+paintTree :: SimpleBT -> ([[Char]], Int)
+paintTree L = ([" L  "], 1)
+paintTree (N lTree rTree) = ([nodeLine, nodeHLine, horLine] ++ subTrees, newNodePos)
+            where                   
+                (lNodePicture, leftNodePos)  = paintTree lTree
+                (rNodePicture, rigthNodePos) = paintTree rTree
+                     
+                ltNewPicture = moveTreePos lNodePicture rNodePicture
+                rtNewPicture = moveTreePos rNodePicture lNodePicture
+                
+                {- write spaces in between if necessary -}
+                moveTreePos :: [String] -> [String] -> [String]
+                moveTreePos str1 str2 | length str1 >= length str2 = str1
+                                      | otherwise = str1 ++ (take rowsToFill (repeat spaces))
+                                           where
+                                              spaces = gen (length (head str1))  " "
+                                              rowsToFill = (length str2) - (length str1)
+                     
+                leftWidth = length (head lNodePicture)
+                rightWidth = length (head rNodePicture)
+                width = leftWidth + rightWidth            
+
+                hLineLength = (leftWidth - leftNodePos) + rigthNodePos
+                newNodePos = leftNodePos + (div hLineLength 2)
+
+                horLine  = (gen leftNodePos " ") ++ "*" ++ gen (hLineLength - 1) "-" ++ "*"
+                                                 ++ gen (width - hLineLength - leftNodePos - 1) " "
+                nodeLine  = (gen newNodePos " ") ++ "N" ++ gen (width - newNodePos - 1) " "
+                nodeHLine = (gen newNodePos " ") ++ "|" ++ gen (width - newNodePos - 1) " " 
+               
+                                      
+                     
+                subTrees = zipWith (++) ltNewPicture rtNewPicture
+                                              
+{- concatenates n times the String str -}
+gen :: Int -> [a] -> [a]
+gen n str = take n (foldr (++) [] (repeat str))
+
+{- insert the necesary new lines to show the rows of the list picture on the screen -}
+printCharList list = putStr (foldr (++) [] (map (++"\n") list))
+
+{- print a simple binary tree -}
+printSimpleBT tree = printCharList (fst (paintTree tree))
 
 insertLeaves :: Integer -> SimpleBT -> SimpleBT
 insertLeaves 0 tree = tree
-insertLeaves n (N L rTree) = N (N L L) (insertLeaves (n-1) rTree)
-insertLeaves n L = N L L 
-insertLeaves n (N lTree rTree) = N (insertLeaves n lTree) (insertLeaves n rTree)
+insertLeaves n (N lTree rTree) 
+            | (heightL lTree) <= (heightR rTree) = N (insertLeaves n lTree) rTree
+            | otherwise = N lTree (insertLeaves n rTree)
+insertLeaves n L = N L L
+
+heightL :: SimpleBT -> Int
+heightL L = 0
+heightL (N lTree _) = 1 + heightL lTree
+
+heightR :: SimpleBT -> Int
+heightR L = 0
+heightR (N _ rTree) = 1 + heightR rTree
 
 -- tree = genSimpleBT 3 -> N (N (N L L) (N L L)) (N (N L L) (N L L))
 -- insertLeaves 2 tree -> N (N (N (N L L) (N L L)) (N L L)) (N (N L L) (N L L))
--- 
+-- Angenommen wir haben 4 Leafes vorher und wollen 2 dazu haben. Wir ersetzen ein
+--Leaf mit N L L und haben nur ein Leaf mehr, also ersetzen wir das nächste Leaf mit
+-- N L L und haben 2 Leafs mehr. Wir müssen also nicht die eingefügten Blätter,
+--sondern Knoten zählen
+
+{-
+Idee: Entfernung zur Momentanen Node vom Linken und Rechten Baum vergleichen und dann auf den
+kürzeren aufrufen und das erste L aufrufen
+-}
 
 -- 4. Aufgabe
 data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
@@ -68,9 +163,34 @@ list2Tree :: (Ord a) => [a] -> BSearchTree a
 list2Tree [] = Nil
 list2Tree (x:xs) = insert x (list2Tree xs)
 
+inOrder :: (Ord a) => BSearchTree a -> [a]
+inOrder Nil = []
+inOrder (Node x ltree rtree) = inOrder ltree ++ x : inOrder rtree
+{-
+These Solutions were all created with the correctness of list2Tree in mind
+so it works if we create a Tree from a list
+-}
 postOrder :: (Ord a) => BSearchTree a -> [a]       
 postOrder Nil = []  
 postOrder (Node x ltree rtree) = postOrder ltree ++ postOrder rtree ++ [x]
+
+oneChild :: (Ord a) => BSearchTree a -> Bool
+oneChild (Node x Nil Nil) = False 
+oneChild (Node x ltree rtree) 
+            | (((ltree == Nil) && not(rtree == Nil))|| (not(ltree == Nil) && (rtree == Nil))) = True
+            | otherwise = ((oneChild ltree) || (oneChild rtree))
+
+complete :: (Ord a) => BSearchTree a -> Bool
+complete Nil = True
+complete (Node _ Nil Nil) = True
+complete (Node _ (Node _ Nil Nil) Nil) = False
+complete (Node _ Nil (Node _ Nil Nil)) = False
+complete (Node _ ltree rtree) = ((complete ltree) && (complete rtree))
+
+--successor :: (Ord a) => a -> BSearchTree a -> Maybe a
+--successor x tree =foldl(\y z -> (y==x) = z) (inOrder tree)
+--Look through list and get the next best element
+
 
 -- 5. Aufgabe
 --a
