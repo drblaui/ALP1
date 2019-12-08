@@ -150,11 +150,12 @@ in a fucking Binary tree, because that is fucking stupid-}
 deleteLeaves :: Integer -> SimpleBT -> SimpleBT
 deleteLeaves 0 tree = tree
 deleteLeaves 1 (N L L) = L
-deleteLeaves n L = N (deleteLeaves (next n 'H') L) (deleteLeaves (next n 'L') L) 
+deleteLeaves 1 L = L
+deleteLeaves n (N _ (N L L)) = N (deleteLeaves (next n 'H') L)  L
+deleteLeaves n (N (N L L) _) = N L (deleteLeaves (next n 'L') L)
 deleteLeaves n (N ltree rtree)
                 | n <= leaves ltree = N ltree (deleteLeaves n rtree)
                 | n > leaves rtree = N (deleteLeaves (next n 'H') ltree) (deleteLeaves (next n 'L') rtree)
-
 -- 4. Aufgabe
 data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
                     deriving (Show, Eq)
@@ -193,9 +194,11 @@ complete (Node _ (Node _ Nil Nil) Nil) = False
 complete (Node _ Nil (Node _ Nil Nil)) = False
 complete (Node _ ltree rtree) = ((complete ltree) && (complete rtree))
 
---successor :: (Ord a) => a -> BSearchTree a -> Maybe a
---successor x tree =foldl(\y z -> (y==x) = z) (inOrder tree)
---Look through list and get the next best element
+{-
+Since I googled successor, because I forgot we actually have
+the lecture slides, I know that a successor is just the next item
+in an indorder list
+-}
 
 
 -- 5. Aufgabe
