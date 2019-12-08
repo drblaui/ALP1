@@ -6,24 +6,32 @@ data Length = Foot Double | Centimeter Double
             | Mile Double
             deriving Show
 
+-- All these conversions come from the the DuckDuckGo converter
+-- This one -> https://duckduckgo.com/?q=cm+1+inch&t=ffnt&atb=v168-1&ia=answer
+-- 1 Foot == 30.48 Meter 
 foot2cm :: Length -> Length
 foot2cm (Foot ft) = Centimeter (ft * 30.48)
 
+-- 1 Inch == 2.54 Cemtimeter
 inch2cm :: Length -> Length
 inch2cm (Inch ic) = Centimeter (ic * 2.54)
 
+-- 1 Yard == 0.9144 Meter
 yard2m :: Length -> Length
-yard2m (Yard yd) = Meter (yd / 1.0936)
+yard2m (Yard yd) = Meter (yd * 0.9144)
 
+-- 1 Mile == 1.609344 Kilometer
 mile2km :: Length -> Length
-mile2km (Mile mi) = Kilometer (mi / 0.62137)
+mile2km (Mile mi) = Kilometer (mi * 1.609344)
 
 
 -- 2. Aufgabe
+-- Got this somewhat out of the lecture
 data Weekday =  Sunday | Monday | Tuesday | Wednesday 
             | Thursday | Friday | Saturday
             deriving (Eq, Ord, Show, Enum)
 
+-- So the date looks cleaner
 type Date = (Int, Int, Int)
 
 leap_year :: Int -> Bool
@@ -31,6 +39,7 @@ leap_year y = ((mod y 4) == 0) && (((mod y 100) /= 0) || (mod y 400) == 0)
 
 weekDay :: Date -> Weekday
 weekDay (day,month,year)
+    -- Basically I replaced the array with another one
     | checkArgs day month year = [Sunday .. Saturday] !! (mod (day + x + (31 * m0) `div` 12) 7)
     | otherwise = error "One of the arguments is not a valid date value"
         where
@@ -42,6 +51,7 @@ weekDay (day,month,year)
                 | elem m [4,6,9,11] = d < 31 && d > 0 && y > 0
                 | (m == 2) = (((leap_year y) && d < 30) || d < 29) && d > 0 && y > 0
                 | otherwise = False
+
 
 -- 3. Aufgabe
 {-- simple trees (algebraic data type explained in the lecture) --}
@@ -144,9 +154,11 @@ leaves :: SimpleBT -> Integer
 leaves L = 1
 leaves (N ltree rtree) = leaves ltree + leaves rtree
 
-{- Works if you want to delete 1 Leaf, why I dont know
-but people that are not insane don't want to delete more than one leaf
-in a fucking Binary tree, because that is fucking stupid-}
+{- 
+I lost so much precious life time on this thing and I ofically quit trying
+This is impossible and nobody would EVER need to remove more than one leaf out of a binary tree
+And this function also only works if you want to remove one leaf, so thats that
+-}
 deleteLeaves :: Integer -> SimpleBT -> SimpleBT
 deleteLeaves 0 tree = tree
 deleteLeaves 1 (N L L) = L
@@ -156,7 +168,10 @@ deleteLeaves n (N (N L L) _) = N L (deleteLeaves (next n 'L') L)
 deleteLeaves n (N ltree rtree)
                 | n <= leaves ltree = N ltree (deleteLeaves n rtree)
                 | n > leaves rtree = N (deleteLeaves (next n 'H') ltree) (deleteLeaves (next n 'L') rtree)
+
+
 -- 4. Aufgabe
+-- Out of lecture
 data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
                     deriving (Show, Eq)
 
@@ -177,16 +192,27 @@ inOrder (Node x ltree rtree) = inOrder ltree ++ x : inOrder rtree
 These Solutions were all created with the correctness of list2Tree in mind
 so it works if we create a Tree from a list
 -}
+{-
+Post Order is as defined in the Lecture the traversion of the binary tree from
+the left tree to the right tree to the root and well that is pretty easy
+-}
 postOrder :: (Ord a) => BSearchTree a -> [a]       
 postOrder Nil = []  
 postOrder (Node x ltree rtree) = postOrder ltree ++ postOrder rtree ++ [x]
 
+{-
+If we have (Node x Nil Nil) we know that the tree at that point does not have a node with just one child
+But if one Tree has Nil on one side and Not Nil on the other side, we know we have an onlyChild and we can stop looking
+-}
 oneChild :: (Ord a) => BSearchTree a -> Bool
 oneChild (Node x Nil Nil) = False 
 oneChild (Node x ltree rtree) 
-            | (((ltree == Nil) && not(rtree == Nil))|| (not(ltree == Nil) && (rtree == Nil))) = True
+            | (((ltree == Nil) && not(rtree == Nil)) || (not(ltree == Nil) && (rtree == Nil))) = True
             | otherwise = ((oneChild ltree) || (oneChild rtree))
 
+{-
+A Binary Search tree is Complete if its balanced so we recusivly look if every node has two or no children
+-}
 complete :: (Ord a) => BSearchTree a -> Bool
 complete Nil = True
 complete (Node _ Nil Nil) = True
@@ -198,6 +224,9 @@ complete (Node _ ltree rtree) = ((complete ltree) && (complete rtree))
 Since I googled successor, because I forgot we actually have
 the lecture slides, I know that a successor is just the next item
 in an indorder list
+
+So we convert our tree to a inorder List with the function from the lecture
+and then just look through the list until we find the item and look if anything comes after it
 -}
 successor :: (Ord a) => a -> BSearchTree a -> Maybe a
 successor k tree = successorHelper k (inOrder tree)
@@ -213,27 +242,139 @@ successorHelper k (x:y:xs)
 
 -- 5. Aufgabe
 --a
-data Queue a = Empty | Queue [a] deriving (Eq, Show)
+data Queue a = Queue [a] [a]
 
+{-
+Since we have to keep two lists and have
+to reverse the second one and use it as the first, if
+the first list is empty, we just make a function that checks
+that and apply it to literally every step we take on the list
+to be sure that our datatype stays true to itself
+In ALP2 we learned a name for that property but I forgot
+-}
+fixQueue :: Queue a -> Queue a
+fixQueue (Queue [] ys) = Queue (reverse ys) []
+fixQueue (Queue xs ys) = Queue xs ys
+
+-- I had problems with dequeue, so I just worked around the problem
+rest :: Queue a -> Queue a
+rest (Queue (x:xs) ys) = Queue xs ys
+
+-- We just add an element at the end of the second list and check if our type is still right
 enqueue :: a -> Queue a -> Queue a
-enqueue x Empty = Queue ([x])
-enqueue x (Queue xs) = Queue (xs ++ [x])
+enqueue x (Queue ys xs) = fixQueue(Queue ys (xs ++ [x]))
 
-dequeue :: (Eq a) => Queue a -> (a, Queue a)
-dequeue (Queue xs) 
-            | isEmpty(Queue xs) = error "Cant remove Element of Empty List"
-            | otherwise = (head xs, Queue $ tail xs)
+-- We remove the firt elememt of the first list, after we checked if the list property is right
+-- we also check the list property afterwards
+-- Also can't remove anything from empty lists, duh
+dequeue :: (Eq a) => Queue a -> Queue a
+dequeue (Queue xs ys)
+        | isEmpty (Queue xs ys) = error "Cant remove Element from Empty List"
+        | otherwise = fixQueue(rest (fixQueue(Queue xs ys)))
 
+--easy pattern matching
 isEmpty :: (Eq a) => Queue a -> Bool
-isEmpty Empty = False
-isEmpty (Queue xs) = True
+isEmpty (Queue [] []) = True
+isEmpty (Queue xs ys) = False
 
+-- An empty Queue are just two empty lists
 makeQueue :: Queue a
-makeQueue = Empty
+makeQueue = Queue [] []
 
+--b
+--these two lines took about 2 hours of my life away
+instance Show a => Show (Queue a) where
+    show (Queue a b) = showQueue (Queue a b)
+
+-- I chose to display lists with a "," between the elements
 showQueue :: (Show a) => Queue a -> String
-showQueue (Queue [x]) = show x
-showQueue (Queue (x:xs)) = show x ++ ", " ++ showQueue (Queue xs)
+showQueue (Queue [] []) = " "
+showQueue (Queue (x:xs) []) = show x
+showQueue (Queue [] (y:ys)) = show y
+showQueue (Queue (x:xs) (y:ys)) = show x ++ "," ++ showQueue (Queue xs []) ++ "," ++ showQueue(Queue [] ys) ++ "," ++ show y 
+
+--c
+instance Eq a => Eq (Queue a) where
+    x == y = isEqual x y
+
+{-
+Since Esponda didn't say, what Queue == Queue means for her,
+we just say the Eq returns true, if the queues have the
+same items in the same order
+-}
+isEqual :: (Eq a) => Queue a -> Queue a -> Bool
+isEqual (Queue xs ys) (Queue zs as) = ((xs == zs) && (ys == as)) 
+
+-- I guess Vergleichs-Infix-Operaoren are <,>,<= and >= so yeah
+instance Ord a => Ord (Queue a) where
+    x < y = isSmaller x y
+    --x > y is just the reverse result of isSmaller
+    x > y = not(isSmaller x y)
+    x <= y = isSmallerEqual x y
+    --x >= y is just the reverse result of isSmallerEqual
+    x >= y = not(isSmallerEqual x y)
+
+{- 
+Thankfully in haskell you can directly compare lists, so we just use that
+Since i have no idea how haskell compares lists, i make them into the queue in the right order
+-}
+isSmaller :: (Ord a) =>  Queue a -> Queue a -> Bool
+isSmaller (Queue xs ys) (Queue zs as) = ((xs ++ (reverse ys)) < (zs ++ reverse (as)))
+
+{-
+Same as isSmaller
+-}
+isSmallerEqual :: (Ord a) => Queue a -> Queue a -> Bool
+isSmallerEqual (Queue xs ys) (Queue zs as) = ((xs ++ (reverse ys)) <= (zs ++ (reverse as)))
+
+
+-- Aufgabe 6
+{-
+Of course I don't know much about Multitrees, so I got 
+some suggestions from https://wiki.haskell.org/99_questions/70B_to_73
+
+ I cant believe that I even try this
+ A "Multitree" datatype is pretty similar to our Binary Tree, except it has
+ a list of children and not just two, the children themselves can just be a tree again
+ Also we don't use a "Nil", because of how we build a tree
+ If our tree is: 
+ NodeA 'a' [NodeA 'b' []] our Nil would automatically just be the []
+ It just is easier than typing:
+ NodeA 'a' [NodeA 'b' Nil]
+-}
+data ABaum a = NodeA a [ABaum a] deriving (Eq, Show)
+
+--Since the functions "nodes" and "height" are already defined I name them different
+
+{-
+This is the same nodes function as for SimpleBT, but 
+we just map the function to every item in the array and then just
+sum them. (I am allowed to use map and sum, since there are no restrictions on the assignment)
+-}
+nodesA :: ABaum a -> Integer
+nodesA (NodeA _ stump) = 1 + sum(map nodesA stump)
+
+{-
+We say the root has the height 0.
+Then we just map our array out to get all the stump lengths 
+and take the largest possible number
+-}
+heightA :: ABaum a -> Integer
+heightA (NodeA _ []) = 0
+heightA (NodeA _ stump) = maximum (map heightA stump) + 1
+
+{-
+I have no idea how or why this works, this came to live at about
+2 in the morning and after 2 whole hours of just reading error messages
+I'm actually afraid to touch anything here, but I guess the [(mapTree func y)]
+just cycles through every possible child there is recusivly.
+Believe me I did not get this from the Internet. I've searched very long only to 
+not find it
+-}
+mapTree :: (a -> b) -> ABaum a -> ABaum b
+mapTree func (NodeA x []) = NodeA (func x) []
+mapTree func (NodeA x (y:stump)) = NodeA (func x) [(mapTree func y)]
+
 
 {-
 If I kill myself, see this as my suicide note
