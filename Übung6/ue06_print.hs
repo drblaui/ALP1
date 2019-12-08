@@ -260,26 +260,26 @@ fixQueue (Queue xs ys) = Queue xs ys
 rest :: Queue a -> Queue a
 rest (Queue (x:xs) ys) = Queue xs ys
 
--- We just add an element at the end of the second list and check if our type is still right
+-- We just add an element at the beginning of the second list and check if our type is still right
 enqueue :: a -> Queue a -> Queue a
-enqueue x (Queue ys xs) = fixQueue(Queue ys (xs ++ [x]))
+enqueue x (Queue ys xs) = fixQueue(Queue ys ([x] ++ xs))
 
 -- We remove the firt elememt of the first list, after we checked if the list property is right
 -- we also check the list property afterwards
 -- Also can't remove anything from empty lists, duh
 dequeue :: (Eq a) => Queue a -> Queue a
-dequeue (Queue xs ys)
+dequeue (Queue (x:xs) ys)
         | isEmpty (Queue xs ys) = error "Cant remove Element from Empty List"
-        | otherwise = fixQueue(rest (fixQueue(Queue xs ys)))
+        | otherwise =  (Queue xs ys)
 
 --easy pattern matching
-isEmpty :: (Eq a) => Queue a -> Bool
+isEmpty :: Queue a -> Bool
 isEmpty (Queue [] []) = True
 isEmpty (Queue xs ys) = False
 
 -- An empty Queue are just two empty lists
 makeQueue :: Queue a
-makeQueue = Queue [] []
+makeQueue = (Queue [] [])
 
 --b
 --these two lines took about 2 hours of my life away
@@ -288,10 +288,10 @@ instance Show a => Show (Queue a) where
 
 -- I chose to display lists with a "," between the elements
 showQueue :: (Show a) => Queue a -> String
-showQueue (Queue [] []) = " "
-showQueue (Queue (x:xs) []) = show x
-showQueue (Queue [] (y:ys)) = show y
-showQueue (Queue (x:xs) (y:ys)) = show x ++ "," ++ showQueue (Queue xs []) ++ "," ++ showQueue(Queue [] ys) ++ "," ++ show y 
+showQueue (Queue [] []) = "[]"
+showQueue (Queue [x] []) = show x
+showQueue (Queue [] [y]) = show y
+showQueue (Queue xs ys) = show (xs ++ reverse ys)
 
 --c
 instance Eq a => Eq (Queue a) where
@@ -326,6 +326,7 @@ Same as isSmaller
 -}
 isSmallerEqual :: (Ord a) => Queue a -> Queue a -> Bool
 isSmallerEqual (Queue xs ys) (Queue zs as) = ((xs ++ (reverse ys)) <= (zs ++ (reverse as)))
+
 
 
 -- Aufgabe 6
@@ -364,16 +365,12 @@ heightA (NodeA _ []) = 0
 heightA (NodeA _ stump) = maximum (map heightA stump) + 1
 
 {-
-I have no idea how or why this works, this came to live at about
-2 in the morning and after 2 whole hours of just reading error messages
-I'm actually afraid to touch anything here, but I guess the [(mapTree func y)]
-just cycles through every possible child there is recusivly.
-Believe me I did not get this from the Internet. I've searched very long only to 
-not find it
+I'm not sure if I am allowed to use a map function in a self defined
+map function, but it works and after 3 hours of trying, I'm not gonna think of anything else
+The fact that I even took this long for this solution makes me sad
 -}
 mapTree :: (a -> b) -> ABaum a -> ABaum b
-mapTree func (NodeA x []) = NodeA (func x) []
-mapTree func (NodeA x (y:stump)) = NodeA (func x) [(mapTree func y)]
+mapTree func (NodeA x stump) = NodeA (func x) (map (mapTree func) stump)
 
 
 {-
