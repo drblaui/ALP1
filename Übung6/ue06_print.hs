@@ -199,7 +199,17 @@ Since I googled successor, because I forgot we actually have
 the lecture slides, I know that a successor is just the next item
 in an indorder list
 -}
+successor :: (Ord a) => a -> BSearchTree a -> Maybe a
+successor k tree = successorHelper k (inOrder tree)
 
+successorHelper :: (Ord a) => a -> [a] -> Maybe a
+successorHelper k [] = Nothing
+successorHelper k (x:[])
+        | (k == x) = Nothing
+        | otherwise = Nothing
+successorHelper k (x:y:xs)
+        | (k == x) = Just y
+        | otherwise = successorHelper k (y:xs)
 
 -- 5. Aufgabe
 --a
