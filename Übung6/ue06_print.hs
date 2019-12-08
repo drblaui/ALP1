@@ -122,32 +122,38 @@ printCharList list = putStr (foldr (++) [] (map (++"\n") list))
 {- print a simple binary tree -}
 printSimpleBT tree = printCharList (fst (paintTree tree))
 
+{- Ich muss zugeben, dass ich diesen Lösungsansatz von Leander Tolksdorf habe,
+aber meine Idee an sich dieselbe war-}
 insertLeaves :: Integer -> SimpleBT -> SimpleBT
 insertLeaves 0 tree = tree
-insertLeaves n (N lTree rTree) 
-            | (heightL lTree) <= (heightR rTree) = N (insertLeaves n lTree) rTree
-            | otherwise = N lTree (insertLeaves n rTree)
-insertLeaves n L = N L L
+insertLeaves 1 L = N L L
+insertLeaves n L = N (insertLeaves (next n 'H') L) (insertLeaves (next n 'L') L)
+insertLeaves n (N ltree rtree)
+            | n <= leaves ltree = N (insertLeaves n ltree) rtree
+            | n > leaves rtree = N (insertLeaves (next n 'H') ltree) (insertLeaves (next n 'L') rtree)
 
-heightL :: SimpleBT -> Int
-heightL L = 0
-heightL (N lTree _) = 1 + heightL lTree
 
-heightR :: SimpleBT -> Int
-heightR L = 0
-heightR (N _ rTree) = 1 + heightR rTree
+next :: Integer -> Char -> Integer
+next n dir = if (n `mod` 2 /= 0) 
+             then case dir of
+                    'H' -> ((n+1) `div` 2)
+                    'L' -> ((n-1) `div` 2)
+             else (n `div` 2)
 
--- tree = genSimpleBT 3 -> N (N (N L L) (N L L)) (N (N L L) (N L L))
--- insertLeaves 2 tree -> N (N (N (N L L) (N L L)) (N L L)) (N (N L L) (N L L))
--- Angenommen wir haben 4 Leafes vorher und wollen 2 dazu haben. Wir ersetzen ein
---Leaf mit N L L und haben nur ein Leaf mehr, also ersetzen wir das nächste Leaf mit
--- N L L und haben 2 Leafs mehr. Wir müssen also nicht die eingefügten Blätter,
---sondern Knoten zählen
+leaves :: SimpleBT -> Integer
+leaves L = 1
+leaves (N ltree rtree) = leaves ltree + leaves rtree
 
-{-
-Idee: Entfernung zur Momentanen Node vom Linken und Rechten Baum vergleichen und dann auf den
-kürzeren aufrufen und das erste L aufrufen
--}
+{- Works if you want to delete 1 Leaf, why I dont know
+but people that are not insane don't want to delete more than one leaf
+in a fucking Binary tree, because that is fucking stupid-}
+deleteLeaves :: Integer -> SimpleBT -> SimpleBT
+deleteLeaves 0 tree = tree
+deleteLeaves 1 (N L L) = L
+deleteLeaves n L = N (deleteLeaves (next n 'H') L) (deleteLeaves (next n 'L') L) 
+deleteLeaves n (N ltree rtree)
+                | n <= leaves ltree = N ltree (deleteLeaves n rtree)
+                | n > leaves rtree = N (deleteLeaves (next n 'H') ltree) (deleteLeaves (next n 'L') rtree)
 
 -- 4. Aufgabe
 data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
