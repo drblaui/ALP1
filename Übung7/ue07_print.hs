@@ -171,3 +171,23 @@ int2ZInt n
     show = showZInts
 -}
 showZInts n = show(zint2Int n)
+
+
+-- 2. Aufgabe
+data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
+                    deriving (Show, Eq)
+
+insert :: (Ord a) => a -> BSearchTree a -> BSearchTree a
+insert k Nil = Node k Nil Nil
+insert k (Node x ltree rtree)
+                | k < x = Node x (insert k ltree) rtree
+                | otherwise = Node x ltree (insert k rtree)
+    
+list2Tree :: (Ord a) => [a] -> BSearchTree a
+list2Tree [] = Nil
+list2Tree (x:xs) = insert x (list2Tree xs)
+
+-- I hate my life, why does she have to fucking fuck us with this shit
+mapTree :: (Ord a, Ord b) => (a -> b) -> BSearchTree a -> BSearchTree b
+mapTree _ Nil = Nil
+mapTree func (Node a ltree rtree) = Node (func a) (mapTree func ltree) (mapTree func rtree)
