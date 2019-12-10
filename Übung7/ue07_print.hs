@@ -61,7 +61,7 @@ maxN a b = iff ((<<) a b) b a
 powN' :: Nat -> Nat -> Nat
 powN' m = foldn (multN m) (S Zero)
 
-data ZInt = Z Nat Nat deriving Show
+data ZInt = Z Nat Nat --deriving Show
 
 addZ :: ZInt -> ZInt -> ZInt
 addZ (Z a b) (Z c d) = Z (addN a c) (addN b d)
@@ -129,14 +129,18 @@ subN' :: Nat -> Nat -> Nat
 subN' = foldn predN
 
 --c
--- Anscheinend ist Z a b = Z NEGTAIVTEIL POSITIVTEIL??
+-- Anscheinend ist Z a b = b - a für die Zahl
 eqZ :: ZInt -> ZInt -> B
 eqZ (Z a b) (Z c d) = eqB (eqN a c) (eqN b d)
 
 (<<<) :: ZInt -> ZInt -> B
 (<<<) (Z a b) (Z c d) = orB ((<<) a c) ((<<) b d)
 
-{-TODO: negZ when I know what the fuck it is-}
+-- Daneben schreiben, was es tut
+negZ :: ZInt -> ZInt
+negZ (Z a Zero) = Z a Zero
+negZ (Z Zero a) = Z a Zero
+negZ a = negZ(simplifyZ a)
 
 -- MaxN but with the smaller operator for ZInt
 maxZ :: ZInt -> ZInt -> ZInt
@@ -145,7 +149,10 @@ maxZ a b = iff ((<<<) a b) b a
 multZ :: ZInt -> ZInt -> ZInt
 multZ (Z a b) (Z c d) = Z (multN a c) (multN b d)
 
-{- abs == Betrag TODO: absZ, when I know what ZInt actually really is-}
+absZ :: ZInt -> ZInt
+absZ (Z a Zero) = Z Zero a
+absZ (Z Zero a) = Z Zero a
+absZ a = absZ(simplifyZ a) 
 
 powZ :: ZInt -> Nat -> ZInt
 powZ (Z a b) n = Z (powN' a n) (powN' b n)
@@ -167,9 +174,9 @@ int2ZInt n
     | otherwise = Z (Zero) (int2Nat n)
 
 --e
-{-instance Show ZInt where
+instance Show ZInt where
     show = showZInts
--}
+
 showZInts n = show(zint2Int n)
 
 
@@ -177,6 +184,7 @@ showZInts n = show(zint2Int n)
 data BSearchTree a = Nil | Node a (BSearchTree a) (BSearchTree a)
                     deriving (Show, Eq)
 
+-- Using list2tree, because I'm way to lazy to type in trees by hand
 insert :: (Ord a) => a -> BSearchTree a -> BSearchTree a
 insert k Nil = Node k Nil Nil
 insert k (Node x ltree rtree)
@@ -191,3 +199,6 @@ list2Tree (x:xs) = insert x (list2Tree xs)
 mapTree :: (Ord a, Ord b) => (a -> b) -> BSearchTree a -> BSearchTree b
 mapTree _ Nil = Nil
 mapTree func (Node a ltree rtree) = Node (func a) (mapTree func ltree) (mapTree func rtree)
+
+--foldTree :: (Ord a) => b -> (a -> b -> b) -> BSearchTree a -> b WTF?
+-- (neuElem) (function) (Baum)
