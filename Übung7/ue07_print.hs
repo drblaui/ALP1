@@ -43,6 +43,10 @@ multN :: Nat -> Nat -> Nat
 multN _ Zero  = Zero
 multN a (S b) = addN a (multN a b)
 
+foldn :: (Nat -> Nat) -> Nat -> Nat -> Nat
+foldn h c Zero  = c
+foldn h c (S n) = h (foldn h c n)
+
 --Funktionen, die ich noch brauchte
 divN :: Nat -> Nat -> Nat
 divN a b = int2Nat((nat2Int a) `div` (nat2Int b))
@@ -85,3 +89,14 @@ isTeilerN a b = if (nat2Int a) `mod` (nat2Int b) == 0 then T else F
 ggtN :: Nat -> Nat -> Nat
 ggtN a Zero = a
 ggtN a b = ggtN b (modN a b)
+
+--b
+{-
+Since n - m are just m predecessors of n, 
+we fold down m times with the predN function
+the foldn function gets called m times, gives out
+our n and then (because of recursion) applies
+predN m times onto n
+-}
+subN' :: Nat -> Nat -> Nat
+subN' = foldn predN
