@@ -1,7 +1,7 @@
 {-# LANGUAGE NPlusKPatterns #-}
 -- 1. Aufgabe
 data B = T | F deriving Show
-data Nat = Zero | S Nat
+data Nat = Zero | S Nat -- deriving Show
 
 -- Funktionen von Frau Esponda
 instance Show Nat where
@@ -129,6 +129,7 @@ subN' :: Nat -> Nat -> Nat
 subN' = foldn predN
 
 --c
+-- Anscheinend ist Z a b = Z NEGTAIVTEIL POSITIVTEIL??
 eqZ :: ZInt -> ZInt -> B
 eqZ (Z a b) (Z c d) = eqB (eqN a c) (eqN b d)
 
@@ -154,3 +155,19 @@ isTeilerZ (Z a b) (Z c d) = eqB (isTeilerN a c) (isTeilerN b d)
 
 ggtZ :: ZInt -> ZInt -> ZInt
 ggtZ (Z a b) (Z c d) = Z (ggtN a c) (ggtN b d)
+
+--d
+zint2Int :: ZInt -> Int
+zint2Int (Z Zero Zero) = 0
+zint2Int (Z a b) = (nat2Int b) - (nat2Int a)
+
+int2ZInt :: Int -> ZInt
+int2ZInt n 
+    | n < 0 = Z (int2Nat (abs n)) (Zero)
+    | otherwise = Z (Zero) (int2Nat n)
+
+--e
+{-instance Show ZInt where
+    show = showZInts
+-}
+showZInts n = show(zint2Int n)
