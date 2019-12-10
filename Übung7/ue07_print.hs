@@ -47,6 +47,33 @@ foldn :: (Nat -> Nat) -> Nat -> Nat -> Nat
 foldn h c Zero  = c
 foldn h c (S n) = h (foldn h c n)
 
+orB :: B -> B -> B
+orB F F = F
+orB _ _ = T
+
+iff :: B -> a -> a -> a
+iff T a _ = a
+iff F _ b = b
+
+maxN :: Nat -> Nat -> Nat
+maxN a b = iff ((<<) a b) b a
+
+powN' :: Nat -> Nat -> Nat
+powN' m = foldn (multN m) (S Zero)
+
+data ZInt = Z Nat Nat deriving Show
+
+addZ :: ZInt -> ZInt -> ZInt
+addZ (Z a b) (Z c d) = Z (addN a c) (addN b d)
+
+subZ :: ZInt -> ZInt -> ZInt
+subZ (Z a b) (Z c d) = Z (addN a d) (addN b c)
+
+simplifyZ :: ZInt -> ZInt
+simplifyZ (Z Zero b) = Z Zero b
+simplifyZ (Z a Zero) = Z a Zero
+simplifyZ (Z (S a) (S b)) = simplifyZ (Z a b)
+
 --Funktionen, die ich noch brauchte
 divN :: Nat -> Nat -> Nat
 divN a b = int2Nat((nat2Int a) `div` (nat2Int b))
@@ -100,3 +127,30 @@ predN m times onto n
 -}
 subN' :: Nat -> Nat -> Nat
 subN' = foldn predN
+
+--c
+eqZ :: ZInt -> ZInt -> B
+eqZ (Z a b) (Z c d) = eqB (eqN a c) (eqN b d)
+
+(<<<) :: ZInt -> ZInt -> B
+(<<<) (Z a b) (Z c d) = orB ((<<) a c) ((<<) b d)
+
+{-TODO: negZ when I know what the fuck it is-}
+
+-- MaxN but with the smaller operator for ZInt
+maxZ :: ZInt -> ZInt -> ZInt
+maxZ a b = iff ((<<<) a b) b a
+
+multZ :: ZInt -> ZInt -> ZInt
+multZ (Z a b) (Z c d) = Z (multN a c) (multN b d)
+
+{- abs == Betrag TODO: absZ, when I know what ZInt actually really is-}
+
+powZ :: ZInt -> Nat -> ZInt
+powZ (Z a b) n = Z (powN' a n) (powN' b n)
+
+isTeilerZ :: ZInt -> ZInt -> B
+isTeilerZ (Z a b) (Z c d) = eqB (isTeilerN a c) (isTeilerN b d)
+
+ggtZ :: ZInt -> ZInt -> ZInt
+ggtZ (Z a b) (Z c d) = Z (ggtN a c) (ggtN b d)
