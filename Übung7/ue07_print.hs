@@ -2,8 +2,8 @@
 -- 1. Aufgabe
 data B = T | F deriving Show
 data Nat = Zero | S Nat
--- Functionen von Frau Esponda
 
+-- Funktionen von Frau Esponda
 instance Show Nat where
     show = showNats
  
@@ -43,10 +43,15 @@ multN :: Nat -> Nat -> Nat
 multN _ Zero  = Zero
 multN a (S b) = addN a (multN a b)
 
+--Funktionen, die ich noch brauchte
+divN :: Nat -> Nat -> Nat
+divN a b = int2Nat((nat2Int a) `div` (nat2Int b))
+
+--mod a b is just a - (b * (a/b))
+modN :: Nat -> Nat -> Nat
+modN a b = subN a (multN b (divN a b))
+
 -- a
-{-
-TODO: eqN und isTeilerN
--}
 eqB :: B -> B -> B
 eqB F T = F
 eqB T F = F
@@ -61,6 +66,9 @@ xorB T F = T
 xorB F T = T
 xorB _ _ = F
 
+eqN :: Nat -> Nat -> B
+eqN a b = if ((nat2Int a) == (nat2Int b)) then T else F
+
 oddN :: Nat -> B
 oddN (Zero) = F
 oddN (S (Zero)) = T
@@ -72,16 +80,8 @@ fibonacci (S (Zero)) = addN Zero (S(Zero))
 fibonacci n = addN (fibonacci(subN n (S(Zero)))) (fibonacci(subN n (S(S(Zero)))))
 
 isTeilerN :: Nat -> Nat -> B
-isTeilerN _ Zero = F
-isTeilerN Zero _ = T
-isTeilerN a b = isTeilerN (subN a b) b
-{-
-ggtN :: Nat -> Nat -> Nat
-ggtN a 0 = a
-ggtN a b = ggtN b (a `mod` b)
---`mod` is equal a - (b * (a/b))-}
+isTeilerN a b = if (nat2Int a) `mod` (nat2Int b) == 0 then T else F
 
-divN :: Nat -> Nat -> Nat
-divN Zero _ = Zero
-divN (S a) b = subN (S a) (multN a b)
---floordiv
+ggtN :: Nat -> Nat -> Nat
+ggtN a Zero = a
+ggtN a b = ggtN b (modN a b)
