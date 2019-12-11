@@ -222,3 +222,8 @@ foldTree b func (Node x ltree rtree) = func x (foldTree b func ltree) (foldTree 
 foldTree' :: (Ord a) => b -> (a -> b -> b) -> BSearchTree a -> b
 foldTree' b f Nil = b
 foldTree' b f (Node x ltree rtree) = foldTree' (f x (foldTree' b f rtree)) f ltree
+
+-- 3. Aufgabe
+--unfold :: (b -> Bool) -> (b -> a) -> (b -> b) -> b -> [a]
+unfold p f g x | p x =  []
+               | otherwise = f x : unfold p f g (g x)
