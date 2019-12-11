@@ -100,7 +100,10 @@ xorB _ _ = F
 
 -- TODO: Überarbeiten
 eqN :: Nat -> Nat -> B
-eqN a b = if ((nat2Int a) == (nat2Int b)) then T else F
+eqN Zero Zero = T
+eqN Zero _ = F
+eqN _ Zero = F
+eqN _ _ = T
 
 oddN :: Nat -> B
 oddN (Zero) = F
@@ -114,7 +117,7 @@ fibonacci n = addN (fibonacci(subN n (S(Zero)))) (fibonacci(subN n (S(S(Zero))))
 
 -- TODO: Überarbeiten
 isTeilerN :: Nat -> Nat -> B
-isTeilerN a b = if (nat2Int a) (nat2Int b) == 0 then T else F
+isTeilerN a b = iff ((eqN) (modN a b) Zero) T F
 
 ggtN :: Nat -> Nat -> Nat
 ggtN a Zero = a
