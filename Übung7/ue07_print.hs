@@ -75,8 +75,9 @@ simplifyZ (Z a Zero) = Z a Zero
 simplifyZ (Z (S a) (S b)) = simplifyZ (Z a b)
 
 --Funktionen, die ich noch brauchte
+-- I'm not even trying to explain how this works, because I'm happy it does
 divN :: Nat -> Nat -> Nat
-divN a b = int2Nat((nat2Int a) `div` (nat2Int b))
+divN a b = iff((<<) a b) (Zero) ( S (divN (subN a b) b))
 
 --mod a b is just a - (b * (a/b))
 modN :: Nat -> Nat -> Nat
@@ -97,6 +98,7 @@ xorB T F = T
 xorB F T = T
 xorB _ _ = F
 
+-- TODO: Überarbeiten
 eqN :: Nat -> Nat -> B
 eqN a b = if ((nat2Int a) == (nat2Int b)) then T else F
 
@@ -110,8 +112,9 @@ fibonacci Zero = addN Zero Zero
 fibonacci (S (Zero)) = addN Zero (S(Zero))
 fibonacci n = addN (fibonacci(subN n (S(Zero)))) (fibonacci(subN n (S(S(Zero)))))
 
+-- TODO: Überarbeiten
 isTeilerN :: Nat -> Nat -> B
-isTeilerN a b = if (nat2Int a) `mod` (nat2Int b) == 0 then T else F
+isTeilerN a b = if (nat2Int a) (nat2Int b) == 0 then T else F
 
 ggtN :: Nat -> Nat -> Nat
 ggtN a Zero = a
@@ -142,7 +145,7 @@ negZ (Z a Zero) = Z a Zero
 negZ (Z Zero a) = Z a Zero
 negZ a = negZ(simplifyZ a)
 
--- MaxN but with the smaller operator for ZInt
+-- maxN but with the smaller operator for ZInt
 maxZ :: ZInt -> ZInt -> ZInt
 maxZ a b = iff ((<<<) a b) b a
 
@@ -202,3 +205,5 @@ mapTree func (Node a ltree rtree) = Node (func a) (mapTree func ltree) (mapTree 
 
 --foldTree :: (Ord a) => b -> (a -> b -> b) -> BSearchTree a -> b WTF?
 -- (neuElem) (function) (Baum)
+
+--DIV Z -> Altes matheskript
