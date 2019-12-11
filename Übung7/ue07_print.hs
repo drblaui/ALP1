@@ -224,6 +224,23 @@ foldTree' b f Nil = b
 foldTree' b f (Node x ltree rtree) = foldTree' (f x (foldTree' b f rtree)) f ltree
 
 -- 3. Aufgabe
---unfold :: (b -> Bool) -> (b -> a) -> (b -> b) -> b -> [a]
-unfold p f g x | p x =  []
+-- unfold (prädikat) (funktion) (manipulationsfunktion) (element)
+unfold p f g x 
+               | p x =  []
                | otherwise = f x : unfold p f g (g x)
+
+
+map' :: (Eq a) => (a -> b) -> [a] -> [b]
+map' f = unfold (==[]) (f.head) tail
+
+-- since iterate runs indefinetly, we have to create a
+--function that accepts an input and always gives back false
+-- Also iterate's first step does not modify x, so we just add it at
+--the beginnig of the list
+iterate' :: (a -> a) -> a -> [a]
+iterate' f x = x:unfold (\x -> False) f f x
+
+-- This is just after the basic formula and since it gives out the wrong 
+-- list, we reverse dat shit
+dec2bin :: Integer -> [Integer]
+dec2bin = reverse . (unfold (== 0) (\x -> (mod x 2)) (\x -> (div x 2)))
