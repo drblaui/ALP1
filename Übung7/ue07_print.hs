@@ -1,4 +1,8 @@
 {-# LANGUAGE NPlusKPatterns #-}
+{-
+TODO: 
+Kill myself
+-}
 -- 1. Aufgabe
 data B = T | F deriving Show
 data Nat = Zero | S Nat -- deriving Show
@@ -98,7 +102,6 @@ xorB T F = T
 xorB F T = T
 xorB _ _ = F
 
--- TODO: Überarbeiten
 eqN :: Nat -> Nat -> B
 eqN Zero Zero = T
 eqN Zero _ = F
@@ -115,7 +118,6 @@ fibonacci Zero = addN Zero Zero
 fibonacci (S (Zero)) = addN Zero (S(Zero))
 fibonacci n = addN (fibonacci(subN n (S(Zero)))) (fibonacci(subN n (S(S(Zero)))))
 
--- TODO: Überarbeiten
 isTeilerN :: Nat -> Nat -> B
 isTeilerN a b = iff ((eqN) (modN a b) Zero) T F
 
@@ -173,7 +175,7 @@ ggtZ (Z a b) (Z c d) = Z (ggtN a c) (ggtN b d)
 zint2Int :: ZInt -> Int
 zint2Int (Z Zero Zero) = 0
 zint2Int (Z a b) = (nat2Int b) - (nat2Int a)
-
+-- TODO: Lmao
 int2ZInt :: Int -> ZInt
 int2ZInt n 
     | n < 0 = Z (int2Nat (abs n)) (Zero)
@@ -206,7 +208,17 @@ mapTree :: (Ord a, Ord b) => (a -> b) -> BSearchTree a -> BSearchTree b
 mapTree _ Nil = Nil
 mapTree func (Node a ltree rtree) = Node (func a) (mapTree func ltree) (mapTree func rtree)
 
---foldTree :: (Ord a) => b -> (a -> b -> b) -> BSearchTree a -> b WTF?
+--foldTree :: (Ord a) => b -> (a -> b -> b -> b) -> BSearchTree a -> b WTF?
 -- (neuElem) (function) (Baum)
+--NEHMEN wir mal an, dass Frau Esponda ihre Signatur NICHT verkackt hat, sehe foldTree so aus:
+foldTree :: (Ord a) => b -> (a -> b -> b -> b) -> BSearchTree a -> b
+foldTree b _ Nil = b
+foldTree b func (Node x ltree rtree) = func x (foldTree b func ltree) (foldTree b func rtree)
+--Diese Funktion funktionier bestimmt, weil ich sie aus dem Internet habe
+-- Allerdings kann ich sie nicht testen, weil ich nicht weiß, was der Input ist
 
---DIV Z -> Altes matheskript
+-- Nehmen wir an, dass Frau Esponda Frau Esponda ist:
+
+foldTree' :: (Ord a) => b -> (a -> b -> b) -> BSearchTree a -> b
+foldTree' b f Nil = b
+foldTree' b f (Node x ltree rtree) = foldTree' (f x (foldTree' b f rtree)) f ltree
