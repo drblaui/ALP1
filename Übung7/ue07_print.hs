@@ -137,7 +137,14 @@ subN' :: Nat -> Nat -> Nat
 subN' = foldn predN
 
 --c
--- Anscheinend ist Z a b = b - a für die Zahl
+{-
+Honestly if anything is the wrong way here I rally can't 
+be blamed, because Miss Esponda did something different
+on her assignment
+All this has been programmed with b-a in mind
+and changed to a - b
+So don't blame me for Miss Esponda's absolute brain damage
+-}
 eqZ :: ZInt -> ZInt -> B
 eqZ (Z a b) (Z c d) = eqB (eqN a c) (eqN b d)
 
@@ -146,8 +153,8 @@ eqZ (Z a b) (Z c d) = eqB (eqN a c) (eqN b d)
 
 -- Daneben schreiben, was es tut
 negZ :: ZInt -> ZInt
-negZ (Z a Zero) = Z a Zero
-negZ (Z Zero a) = Z a Zero
+negZ (Z a Zero) = Z Zero a
+negZ (Z Zero a) = Z Zero a
 negZ a = negZ(simplifyZ a)
 
 -- maxN but with the smaller operator for ZInt
@@ -174,12 +181,12 @@ ggtZ (Z a b) (Z c d) = Z (ggtN a c) (ggtN b d)
 --d
 zint2Int :: ZInt -> Int
 zint2Int (Z Zero Zero) = 0
-zint2Int (Z a b) = (nat2Int b) - (nat2Int a)
--- TODO: Lmao
+zint2Int (Z a b) = (nat2Int a) - (nat2Int b)
+
 int2ZInt :: Int -> ZInt
 int2ZInt n 
-    | n < 0 = Z (int2Nat (abs n)) (Zero)
-    | otherwise = Z (Zero) (int2Nat n)
+    | n < 0 = Z (Zero) (int2Nat n)
+    | otherwise = Z (int2Nat (abs n)) (Zero)
 
 --e
 instance Show ZInt where
