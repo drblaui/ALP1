@@ -1,3 +1,5 @@
+% KETTE. ALSO JEDE SEITE EINZELN ABARBEITEN
+
 \documentclass[11pt]{article}
 \pagestyle{empty}
 \usepackage[utf8]{inputenc}
@@ -47,7 +49,8 @@
  \aufgabe{Aufgabe}\punkte{24}
 \begin{enumerate}
 \item
-\textit{Behauptung: reverse(reverse xs) = xs}
+\textit{Behauptung: reverse(reverse xs) = xs}\\
+Induktion über Liste xs der Länge n
 \vspace*{0.5cm}
 \newline
 \textbf{Induktionsanfang:} xs = [ ]\\
@@ -59,11 +62,12 @@ reverse(reverse xs') = xs'
 
 \vspace*{0.5cm}
 \textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-reverse(reverse (x:xs')) $\stackrel{rev.2}{=}$ reverse(reverse xs' ++ [x]) $\equiv$\\
-(reverse [x]) ++ reverse (reverse xs') $\stackrel{rev.2}{=}$\\  (reverse ([ ]) ++ [x]) ++ reverse(reverse xs') $\stackrel{rev.1}{=}$\\
+reverse(reverse (x:xs')) $\stackrel{rev.2}{=}$ reverse(reverse xs' ++ [x])\\ 
+$\equiv$ (reverse [x]) ++ reverse (reverse xs')\\ $\stackrel{rev.2}
+{\leftrightarrow}$ (reverse ([ ]) ++ [x]) ++ reverse(reverse xs') $\stackrel{rev.1}{\leftrightarrow}$\\
 ([ ] ++ [x]) ++ reverse(reverse xs') $\stackrel{(++).1}{=}$\\
 \ [x] ++ reverse(reverse xs') $\stackrel{nach IV}{=}$\\
-\ [x] ++ xs' $\equiv$ (x:xs')
+\textbf{[x] ++ xs' $\equiv$ (x:xs')}
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
@@ -89,7 +93,90 @@ reverse((x:xs') ++ ys) = reverse ys ++ (reverse xs' ++ [x]) $\stackrel{(++).2}{=
 reverse(x:(xs'++ys)) = reverse ys ++ (reverse xs' ++ [x]) $\stackrel{rev.2}{=}$\\
 reverse(xs'++ys) ++ [x] = reverse ys ++ (reverse xs' ++[x]) $\stackrel{nach IV}{=}$\\
 reverse ys ++ reverse xs' ++ [x] = reverse ys ++ (reverse xs' ++ [x]) $\equiv$\\
-reverse ys ++ reverse xs' ++ [x] = reverse ys ++ reverse xs' ++ [x]
+\textbf{reverse ys ++ reverse xs' ++ [x] = reverse ys ++ reverse xs' ++ [x]}
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+\vspace*{0.5cm}
+\item
+\textit{Behauptung: elem a (xs ++ ys) = elem a xs $||$ elem a ys}
+\vspace*{0.5cm}
+\newline
+\textbf{Induktionsanfang:} xs = [ ]\\
+elem a ([ ] ++ ys) = elem a [ ] $||$ elem a ys $\stackrel{(++).1}{=}$\\
+elem a ys = elem a [] $||$ elem a ys $\stackrel{elem.1}{=}$\\
+elem a ys = False $||$ elem a ys $\equiv$\\
+elem a ys = elem a ys
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
+elem a (xs' ++ ys) = elem a xs' $||$ elem a ys
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
+elem a ((x:xs') ++ ys) = elem a (x:xs') $||$ elem a ys $\stackrel{(++).1}{=}$\\
+elem a (x:(xs' ++ ys)) = elem a (x:xs') $||$ elem a ys $\stackrel{elem.3}{=}$\\
+elem a (x:(xs' ++ ys)) = elem a ys $||$ elem a ys $\equiv$\\
+elem a (x:(xs' ++ ys)) = elem a ys $\equiv$\\
+elem a [x] $||$ elem a (xs' ++ ys) = elem a ys $\stackrel{nach IV}{=}$\\
+elem a [x] $||$ (elem a xs' $||$ elem a ys) = elem a ys $\equiv$\\
+elem a (x:[]) $||$ (elem a xs' $||$ elem a ys) = elem a ys $\stackrel{elem.1}{=}$\\
+False $||$ (elem a xs' $||$ elem a ys) = elem a ys $\equiv$\\
+elem a xs' $||$ elem a ys = elem a ys\\
+
+TODO: Überarbeiten. Ergebnis ist falsch
+
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+\vspace*{0.5cm}
+\item
+\textit{Behauptung: (takeWhile p xs) ++ (dropWhile p xs) = xs}
+\vspace*{0.5cm}
+\newline
+\textbf{Induktionsanfang:} xs = [ ]\\
+(takeWhile p [ ]) ++ (dropWhile p [ ]) = [ ] $\stackrel{takeW.1}{=}$\\
+\ [ ] ++ (dropWhile p [ ]) = [ ] $\stackrel{dropW.1}{=}$\\
+\ [ ] ++ [ ] = [ ] $\stackrel{(++).1}{=}$\\
+\ [ ] = [ ]
+
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
+(takeWhile p xs') ++ (dropWhile p xs') = xs'
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
+(takeWhile p (x:xs')) ++ (dropWhile p (x:xs')) = (x:xs') $\stackrel{takeW.2}{=}$\\
+(x:(takeWhile p xs')) ++ (dropWhile p (x:xs')) = (x:xs') $\stackrel{dropW.2}{=}$\\
+(x:(takeWhile p xs')) ++ (dropWhile p xs') = (x:xs') $\stackrel{(++).2}{=}$\\
+x:((takeWhile p xs') ++ (dropWhile p xs') = (x:xs') $\stackrel{nach IV}{=}$\\
+\textbf{(x:xs') = (x:xs')}
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+\vspace*{0.5cm}
+\item
+\textit{Behauptung: map (f . g) xs = map f xs . map g xs}
+
+\vspace*{0.5cm}
+\textbf{Induktionsanfang:} xs = [ ]\\
+map (f . g) [ ] = map f [ ] . map g [ ] $\stackrel{map.1}{=}$\\
+\ [ ] = [ ]
+
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
+map (f . g) xs' = map f xs' . map g xs'
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
+map (f . g) (x:xs') = map f (x:xs') . map g (x:xs') $\stackrel{map.2}{=}$\\
+g(f(x)):map(f . g) xs' = g(f(x)):(map f xs' . map g xs') $\stackrel{nach IV}{=}$\\
+\textbf{g(f(x)):(map f xs' . map g xs') = g(f(x)):(map f xs' . map g xs')}
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
