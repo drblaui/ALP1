@@ -180,6 +180,89 @@ g(f(x)):map(f . g) xs' = g(f(x)):(map f xs' . map g xs') $\stackrel{nach IV}{=}$
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+\vspace*{0.5cm}
+\item
+\textit{Behauptung: map f . concat = concat . map(map f)}
+
+\vspace*{0.5cm}
+\textbf{Induktionsanfang:} xs = [ ]\\
+map f . concat [] = concat . map(map f) [] $\stackrel{map.1}{=}$\\
+concat [ ] = concat . map(map f) [ ] $\stackrel{concat.1}{=}$\\
+concat [ ] = (foldr (++) [ ] [ ]) . map(map f) $\stackrel{foldr.1}{=}$\\
+concat [ ] = [ ] . map(map f) $\stackrel{map.1}{=}$\\
+concat [ ] = [ ] $\stackrel{concat.1}{=}$\\
+\ [ ] = [ ]
+
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
+map f . concat xs' = concat . map(map f) xs'
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
+map f . concat (x:xs') = concat . map(map f) (x:xs') $\stackrel{map.2}{=}$\\
+concat(f(x):map f xs') = concat . map(map f) (x:xs')\\
+TO BE CONTINUED
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
 \end{enumerate}
+\item
+\vspace*{0.5cm}
+\textit{Behauptung: length(powset xs) = $2^{(length(xs))}$}
+
+\vspace*{0.5cm}
+\textbf{Induktionsanfang:} xs = [ ]\\
+length(powset [ ]) = $2^{(length([ ])} \stackrel{e.1}{=}$\\
+length(powset [ ]) = $2^1 \stackrel{powset.1}{=}$\\
+length([[ ]]) = $2^1 \stackrel{e.1}{=}$\\
+1 = $2^1 \equiv$\\
+1 = 1
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
+length(powset xs') = $2^{(length(xs'))}$
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
+length(powset (x:xs')) = $2^{(length(x:xs'))} \stackrel{powset.2}{=}$\\
+length(powset xs' ++ [x:ys $\mid ys <$- powset xs']) = $2^{(length(x:xs'))} \equiv$\\
+length(powset xs') + (length [x:ys $\mid ys <$- powset xs']) = $2^{(length(x:xs'))} \stackrel{nach IV}{=}$\\
+$2^{(length(xs'))}$ + (length [x:ys $\mid ys  <$- powset xs']) = $2^{(length(x:xs'))} \stackrel{e.1}{=}$\\
+$2^{(length(xs'))}$ + (length(powset xs') + 1) = $2^{(length(x:xs'))} \stackrel {nach IV}{=}$\\
+$2^{(length(xs'))} + 2^{((length(xs')) + 1)} = 2^{(length(x:xs'))} \equiv$\\
+$2^{(length(xs')} * 2^1 = 2^{(length(xs')} * 2^1$
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+\item
+\vspace*{0.5cm}
+\textit{Behauptung: sumLeaves t = sumNodes t + 1}
+
+\vspace*{0.5cm}
+\textbf{Induktionsanfang:} Sei t = (Leaf x)\\
+sumLeaves (Leaf x) = sumNodes (Leaf x) + 1 $\stackrel{sumLeaves.1}{=}$\\
+1 = sumNodes (Leaf x ) + 1 $\stackrel{sumNodes.1}{=}$\\
+1 = 0 + 1 $\equiv$\\
+1 = 1
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für t = (Node x lt rt) gilt:\\
+sumLeaves lt = sumNodes lt + 1\\
+und\\
+sumLeaves rt = sumNodes rt + 1
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei t = (Node x lt rt)\\
+sumLeaves (Node x lt rt) = sumNodes (Node x lt rt) + 1 $\stackrel{sumLeaves.2}{=}$\\
+sumLeaves lt + sumLeaves rt = sumNodes (Node x lt rt) + 1 $\stackrel{sumNodes.2}{=}$\\
+sumLeaves lt + sumLeaves rt = 1 + sumNodes lt + sumNodes rt + 1 $\stackrel{nach IV}{=}$\\
+sumNodes lt + 1 + sumNodes rt + 1 = 1 + sumNodes lt + sumNodes rt + 1 $\equiv$\\
+\textbf{sumNodes lt + sumNodes rt + 2 = sumNodes lt + sumNodes rt + 2}
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle t (endliche Binärbäume) gilt.}
 \end{enumerate}
 \end{document}
