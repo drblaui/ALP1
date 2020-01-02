@@ -9,6 +9,7 @@
 \usepackage{amsthm}
 \usepackage{german}
 \usepackage{mathtools}
+\usepackage{amsmath}
 
 \parindent0mm
 \sloppy
@@ -27,6 +28,7 @@
 \newcommand{\ceil}[1]{\lceil{#1}\rceil}
 \newcommand{\half}[1]{\frac{#1}{2}}
 \newcommand{\punkte}[1]{{\small{ }(#1 Punkte)}}
+\newcommand{\bonuspunke}[1]{{\small{ }(#1 Bonuspunkte)}}
 
 \newcommand{\aufgabe}[1]{\item{\bf #1}}
 
@@ -50,150 +52,169 @@
 \begin{enumerate}
 \item
 \textit{Behauptung: reverse(reverse xs) = xs}\\
-Induktion über Liste xs der Länge n
 \vspace*{0.5cm}
-\newline
 \textbf{Induktionsanfang:} xs = [ ]\\
-reverse(reverse [ ]) $\stackrel{rev.1}{=}$ reverse [ ] $\stackrel{rev.1}{=}$ [ ]
+reverse(reverse [ ]) $\stackrel{rev.1}{=}$ reverse [ ] $\stackrel{rev.1}{=}$ [ ] $\equiv$ xs
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
 reverse(reverse xs') = xs'
 
 \vspace*{0.5cm}
-\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-reverse(reverse (x:xs')) $\stackrel{rev.2}{=}$ reverse(reverse xs' ++ [x])\\ 
-$\equiv$ (reverse [x]) ++ reverse (reverse xs')\\ $\stackrel{rev.2}
-{\leftrightarrow}$ (reverse ([ ]) ++ [x]) ++ reverse(reverse xs') $\stackrel{rev.1}{\leftrightarrow}$\\
-([ ] ++ [x]) ++ reverse(reverse xs') $\stackrel{(++).1}{=}$\\
-\ [x] ++ reverse(reverse xs') $\stackrel{nach IV}{=}$\\
-\textbf{[x] ++ xs' $\equiv$ (x:xs')}
-
+\textbf{Indukionsschritt:} Sei xs = (x:xs')
+\begin{align*}
+&reverse(reverse (x:xs')) &= (x:xs')\\
+\stackrel{rev.2}{\equiv} &reverse(reverse xs' ++ [x]) &= (x:xs')\\
+\equiv\phantom{.} &(reverse [x]) ++ reverse(reverse xs') &= (x:xs')\\
+\stackrel{rev.2}{\equiv} &(reverse [ ] ++ [x]) ++ reverse(reverse xs') &= (x:xs')\\
+\stackrel{rev.1}{\equiv} &([ ] ++ [x]) ++ reverse(reverse xs') &= (x:xs')\\
+\stackrel{(++).1}{\equiv} &[x] ++ reverse(reverse xs') &= (x:xs')\\
+\stackrel{nach IV}{\equiv} &[x] ++ xs' &= (x:xs')\\
+\equiv\phantom{.} &(x:xs') &= (x:xs')\\
+\end{align*}
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
-
+\newpage
 \vspace*{0.5cm}
 \item
-\textit{Behauptung: reverse(xs ++ ys) = reverse ys ++ reverse xs}
+\textit{Behauptung: reverse(xs ++ ys) = reverse ys ++ reverse xs}\\
 \vspace*{0.5cm}
-\newline
-\textbf{Induktionsanfang:} xs = [ ]\\
-reverse([] ++ ys) = reverse ys ++ reverse [] $\stackrel{rev.1}{=}$\\
-reverse([] ++ ys) = reverse ys ++ [] $\stackrel{(++).1}{=}$\\
-reverse ys = reverse ys
+\textbf{Induktionsanfang:} xs = [ ]
+\begin{alignat*}{2}
+&reverse([] ++ ys) &&= reverse\phantom{.}ys \phantom{.}++\phantom{.} reverse\phantom{.}[]\\
+\stackrel{rev.1}{\equiv} &reverse([] ++ ys) &&= reverse\phantom{.} ys \phantom{.}++\phantom{.} []\\
+\stackrel{(++).1}{\equiv} &reverse\phantom{.} ys &&= reverse\phantom{.} ys
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
 reverse(xs' ++ ys) = reverse ys ++ reverse xs'
 
 \vspace*{0.5cm}
-\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-reverse((x:xs') ++ ys) = reverse ys ++ reverse(x:xs') $\stackrel{rev.2}{=}$\\
-reverse((x:xs') ++ ys) = reverse ys ++ (reverse xs' ++ [x]) $\stackrel{(++).2}{=}$\\
-reverse(x:(xs'++ys)) = reverse ys ++ (reverse xs' ++ [x]) $\stackrel{rev.2}{=}$\\
-reverse(xs'++ys) ++ [x] = reverse ys ++ (reverse xs' ++[x]) $\stackrel{nach IV}{=}$\\
-reverse ys ++ reverse xs' ++ [x] = reverse ys ++ (reverse xs' ++ [x]) $\equiv$\\
-\textbf{reverse ys ++ reverse xs' ++ [x] = reverse ys ++ reverse xs' ++ [x]}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')
+\begin{alignat*}{2}
+&reverse((x:xs')\phantom{.}++\phantom{.}ys) &&= reverse\phantom{.}ys \phantom{.}++\phantom{.}reverse(x:xs')\\
+\stackrel{rev.2}{\equiv} &reverse((x:xs')\phantom{.}++\phantom{.}ys) &&= reverse \phantom{.} ys\phantom{.}++\phantom{.}(reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x])\\
+\stackrel{(++).2}{\equiv} &reverse(x:(xs'++ys)) &&= reverse\phantom{.}ys\phantom{.}++\phantom{.}(reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x])\\
+\stackrel{rev.2}{\equiv}&reverse(xs'++ys)\phantom{.}++\phantom{.}[x]&&=reverse\phantom{.}ys\phantom{.}++\phantom{.}(reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x])\\
+\stackrel{nach IV}{\equiv} &reverse\phantom{.}ys\phantom{.}++\phantom{.}reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x] &&= reverse\phantom{.}ys++\phantom{.}(reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x])\\
+\equiv \phantom{.}&reverse\phantom{.}ys\phantom{.}++\phantom{.}reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x] &&= reverse\phantom{.}ys\phantom{.}++\phantom{.}reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x]
+\end{alignat*}
+
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
 
 \vspace*{0.5cm}
 \item
-\textit{Behauptung: elem a (xs ++ ys) = elem a xs $||$ elem a ys}
-\vspace*{0.5cm}
-\newline
-\textbf{Induktionsanfang:} xs = [ ]\\
-elem a ([ ] ++ ys) = elem a [ ] $||$ elem a ys $\stackrel{(++).1}{=}$\\
-elem a ys = elem a [] $||$ elem a ys $\stackrel{elem.1}{=}$\\
-elem a ys = False $||$ elem a ys $\equiv$\\
-elem a ys = elem a ys
+\textit{Behauptung: elem a (xs ++ ys) = elem a xs $||$ elem a ys}\\
+\textbf{Induktionsanfang:} xs = []
+\begin{alignat*}{3}
+&elem\phantom{.}a\phantom{.}([]\phantom{.}++\phantom{.}ys) &&= elem\phantom{.}a\phantom{.}[]\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\stackrel{(++).1}{\equiv}&elem\phantom{.}a\phantom{.}ys &&= elem\phantom{.}a\phantom{.}[]\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\stackrel{elem.1}{\equiv}&elem\phantom{.}a\phantom{.}ys&&=False\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\equiv \phantom{.}&elem\phantom{.}a\phantom{.}ys&&=elem\phantom{.}a\phantom{.}ys &&\
+\end{alignat*}
+
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
 elem a (xs' ++ ys) = elem a xs' $||$ elem a ys
-
-\vspace*{0.5cm}
+\newpage
 \textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-elem a ((x:xs') ++ ys) = elem a (x:xs') $||$ elem a ys $\stackrel{(++).1}{=}$\\
-elem a (x:(xs' ++ ys)) = elem a (x:xs') $||$ elem a ys $\stackrel{elem.3}{=}$\\
-elem a (x:(xs' ++ ys)) = elem a ys $||$ elem a ys $\equiv$\\
-elem a (x:(xs' ++ ys)) = elem a ys $\equiv$\\
-elem a [x] $||$ elem a (xs' ++ ys) = elem a ys $\stackrel{nach IV}{=}$\\
-elem a [x] $||$ (elem a xs' $||$ elem a ys) = elem a ys $\equiv$\\
-elem a (x:[]) $||$ (elem a xs' $||$ elem a ys) = elem a ys $\stackrel{elem.1}{=}$\\
-False $||$ (elem a xs' $||$ elem a ys) = elem a ys $\equiv$\\
-elem a xs' $||$ elem a ys = elem a ys\\
-
-TODO: Überarbeiten. Ergebnis ist falsch
-
+\phantom{Krie}\textbf{Fall 1 (x immer ungleich y):}
+\begin{alignat*}{3}
+&elem\phantom{.}a\phantom{.}((x:xs')\phantom{.}++\phantom{.}ys)&&=elem\phantom{.}a\phantom{.}(x:xs')\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\stackrel{(++).2}{\equiv}&elem\phantom{.}a\phantom{.}(x:(xs'\phantom{.}++\phantom{.}ys))&&=elem\phantom{.}a\phantom{.}(x:xs')\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\stackrel{elem.3}{\equiv}&elem\phantom{.}a\phantom{.}(x:(xs'\phantom{.}++\phantom{.}ys))&&=elem\phantom{.}a\phantom{.}ys\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\equiv\phantom{.}&elem\phantom{.}a\phantom{.}(x:(xs'\phantom{.}++\phantom{.}ys))&&=elem\phantom{.}a\phantom{.}ys&&\\
+\equiv\phantom{.}&elem\phantom{.}a\phantom{.}[x]\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}(xs'\phantom{.}++\phantom{.}ys)&&=elem\phantom{.}a\phantom{.}ys&&\\
+\stackrel{nach IV}{\equiv}&elem\phantom{.}a\phantom{.}[x]\phantom{.}||\phantom{.}(elem\phantom{.}a\phantom{.}xs'\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}ys)&&=elem\phantom{.}a\phantom{.}ys&&\\
+\equiv\phantom{.}&elem\phantom{.}a\phantom{.}(x:[])\phantom{.}||\phantom{.}(elem\phantom{.}a\phantom{.}xs'\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}ys)&&=elem\phantom{.}a\phantom{.}ys&&\\
+\stackrel{elem.1}{\equiv}&False\phantom{.}||\phantom{.}(elem\phantom{.}a\phantom{.}xs'\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}ys)&&=elem\phantom{.}a\phantom{.}ys&&\\
+\equiv\phantom{.}&elem\phantom{.}a\phantom{.}xs'\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}ys&&=elem\phantom{.}a\phantom{.}ys&&\\
+&\text{\textbf{Liefert kein eindeutiges Ergebnis}}
+\end{alignat*}
+\newline
+\phantom{Krie}\textbf{Fall 2 (x==y):}
+\begin{alignat*}{3}
+&elem\phantom{.}a\phantom{.}((x:xs')\phantom{.}++\phantom{.}ys)&&=elem\phantom{.}a\phantom{.}(x:xs')\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\stackrel{(++).2}{\equiv}&elem\phantom{.}a\phantom{.}(x:(xs'\phantom{.}++\phantom{.}ys))&&=elem\phantom{.}a\phantom{.}(x:xs')\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\stackrel{elem.2}{\equiv}&elem\phantom{.}a\phantom{.}(x:(xs'\phantom{.}++\phantom{.}ys))&&=True\phantom{.}&&||\phantom{.}elem\phantom{.}a\phantom{.}ys\\
+\equiv\phantom{.}&elem\phantom{.}a\phantom{.}(x:(xs'\phantom{.}++\phantom{.}ys))&&=True &&\\
+\equiv\phantom{.}&elem\phantom{.}a\phantom{.}[x]\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}(xs'\phantom{.}++\phantom{.}ys)&&=True &&\\
+\stackrel{elem.2}{\equiv}&True\phantom{.}||\phantom{.}elem\phantom{.}a\phantom{.}(xs'\phantom{.}++\phantom{.}ys)&&=True&&\\
+\equiv\phantom{.}&True&&=True
+\end{alignat*}
 
 \vspace*{0.5cm}
-\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+\textbf{Das bedeutet, dass die Behauptung für (fast) alle xs (endliche Listen) gilt.}
 
 \vspace*{0.5cm}
 \item
-\textit{Behauptung: (takeWhile p xs) ++ (dropWhile p xs) = xs}
-\vspace*{0.5cm}
-\newline
-\textbf{Induktionsanfang:} xs = [ ]\\
-(takeWhile p [ ]) ++ (dropWhile p [ ]) = [ ] $\stackrel{takeW.1}{=}$\\
-\ [ ] ++ (dropWhile p [ ]) = [ ] $\stackrel{dropW.1}{=}$\\
-\ [ ] ++ [ ] = [ ] $\stackrel{(++).1}{=}$\\
-\ [ ] = [ ]
+\textit{Behauptung: (takeWhile p xs) ++ (dropWhile p xs) = xs}\\
+\textbf{Induktionsanfang:} xs = [ ]
+\begin{alignat*}{2}
+&(takeWhile\phantom{.}p\phantom{.}[])\phantom{.}++\phantom{.}(dropWhile\phantom{.}p\phantom{.}[])&&=[]\\
+\stackrel{takeW.1}{\equiv}&[]\phantom{.}++\phantom{.}(dropWhile\phantom{.}p\phantom{.}[])&&=[]\\
+\stackrel{dropW.1}{\equiv}&[]\phantom{.}++\phantom{.}[]&&=[]\\
+\stackrel{(++).1}{\equiv}&[]&&=[]
+\end{alignat*}
 
-
-\vspace*{0.5cm}
+\newpage
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
 (takeWhile p xs') ++ (dropWhile p xs') = xs'
 
 \vspace*{0.5cm}
-\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-(takeWhile p (x:xs')) ++ (dropWhile p (x:xs')) = (x:xs') $\stackrel{takeW.2}{=}$\\
-(x:(takeWhile p xs')) ++ (dropWhile p (x:xs')) = (x:xs') $\stackrel{dropW.2}{=}$\\
-(x:(takeWhile p xs')) ++ (dropWhile p xs') = (x:xs') $\stackrel{(++).2}{=}$\\
-x:((takeWhile p xs') ++ (dropWhile p xs') = (x:xs') $\stackrel{nach IV}{=}$\\
-\textbf{(x:xs') = (x:xs')}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')
+\begin{alignat*}{2}
+&(takeWhile\phantom{.}p\phantom{.}(x:xs'))\phantom{.}++\phantom{.}(dropWhile\phantom{.}p\phantom{.}(x:xs'))&&=(x:xs')\\
+\stackrel{takeW.2}{\equiv}&(x:(takeWhile\phantom{.}p\phantom{.}xs'))\phantom{.}++\phantom{.}(dropWhile\phantom{.}p\phantom{.}(x:xs'))&&=(x:xs')\\
+\stackrel{dropW.2}{\equiv}&(x:(takeWhile\phantom{.}p\phantom{.}xs'))\phantom{.}++\phantom{.}(dropWhile\phantom{.}p\phantom{.}xs')&&=(x:xs')\\
+\stackrel{(++).2}{\equiv}&x:((takeWhile\phantom{.}p\phantom{.}xs')\phantom{.}++\phantom{.}(dropWhile\phantom{.}p\phantom{.}xs')&&=(x:xs')\\
+\stackrel{nach IV}{\equiv}&(x:xs')&&=(x:xs')
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
 
 \vspace*{0.5cm}
 \item
-\textit{Behauptung: map (f . g) xs = map f xs . map g xs}
-
-\vspace*{0.5cm}
-\textbf{Induktionsanfang:} xs = [ ]\\
-map (f . g) [ ] = map f [ ] . map g [ ] $\stackrel{map.1}{=}$\\
-\ [ ] = [ ]
-
+\textit{Behauptung: map (f . g) xs = map f xs . map g xs}\\
+\textbf{Induktionsanfang:} xs = [ ]
+\begin{alignat*}{2}
+&map\phantom{.}(f\phantom{.}.\phantom{.}g)\phantom{.}[]&&=map\phantom{.}f\phantom{.}[]\phantom{.}.\phantom{.}map\phantom{.}g\phantom{.}[]\\
+\stackrel{map.1}{\equiv}&[]&&=[]
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
 map (f . g) xs' = map f xs' . map g xs'
 
 \vspace*{0.5cm}
-\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-map (f . g) (x:xs') = map f (x:xs') . map g (x:xs') $\stackrel{map.2}{=}$\\
-g(f(x)):map(f . g) xs' = g(f(x)):(map f xs' . map g xs') $\stackrel{nach IV}{=}$\\
-\textbf{g(f(x)):(map f xs' . map g xs') = g(f(x)):(map f xs' . map g xs')}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')
+\begin{alignat*}{2}
+&map\phantom{.}(f\phantom{.}.\phantom{.}g)\phantom{.}(x:xs')&&=map\phantom{.}f\phantom{.}(x:xs')\phantom{.}.\phantom{.}map\phantom{.}g\phantom{.}(x:xs')\\
+\stackrel{map.2}{\equiv}&g(f(x)):map(f\phantom{.}.\phantom{.}g)\phantom{.}xs'&&=g(f(x)):(map\phantom{.}f\phantom{.}xs'\phantom{.}.\phantom{.}map\phantom{.}g\phantom{.}xs')\\
+\stackrel{nach IV}{\equiv}&g(f(x)):(map\phantom{.}f\phantom{.}xs'\phantom{.}.\phantom{.}map\phantom{.}g\phantom{.}xs')&&=g(f(x)):(map\phantom{.}f\phantom{.}xs'\phantom{.}.\phantom{.}map\phantom{.}g\phantom{.}xs')
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
-
+\newpage
 \vspace*{0.5cm}
+
 \item
-\textit{Behauptung: map f . concat = concat . map(map f)}
-
-\vspace*{0.5cm}
-\textbf{Induktionsanfang:} xs = [ ]\\
-map f . concat [] = concat . map(map f) [] $\stackrel{map.1}{=}$\\
-concat [ ] = concat . map(map f) [ ] $\stackrel{concat.1}{=}$\\
-concat [ ] = (foldr (++) [ ] [ ]) . map(map f) $\stackrel{foldr.1}{=}$\\
-concat [ ] = [ ] . map(map f) $\stackrel{map.1}{=}$\\
-concat [ ] = [ ] $\stackrel{concat.1}{=}$\\
-\ [ ] = [ ]
-
+\textit{Behauptung: map f . concat = concat . map(map f)}\\
+\textbf{Induktionsanfang:} xs = [ ]
+\begin{alignat*}{2}
+&map\phantom{.}f\phantom{.}.\phantom{.}concat\phantom{.}[]&&=concat\phantom{.}.\phantom{.}map(map\phantom{.}f)\phantom{.}[]\\
+\stackrel{map.1}{\equiv}&concat\phantom{.}[]&&=concat\phantom{.}.\phantom{.}map(map\phantom{.}f)\phantom{.}[]\\
+\stackrel{concat.1}{\equiv}&concat\phantom{.}[]&&=(foldr\phantom{.}(++)\phantom{.}[]\phantom{.}[])\phantom{.}.\phantom{.}map(map\phantom{.}f)\\
+\stackrel{foldr.1}{\equiv}&concat\phantom{.}[]&&=[]\phantom{.}.\phantom{.}map(map\phantom{.}f)\\
+\stackrel{map.1}{\equiv}&concat\phantom{.}[]&&=[]\\
+\stackrel{concat.1}{\equiv}&[]&&=[]
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
@@ -201,66 +222,106 @@ map f . concat xs' = concat . map(map f) xs'
 
 \vspace*{0.5cm}
 \textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-map f . concat (x:xs') = concat . map(map f) (x:xs') $\stackrel{map.2}{=}$\\
-concat(f(x):map f xs') = concat . map(map f) (x:xs')\\
-TO BE CONTINUED
-
-\vspace*{0.5cm}
-\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+/
 \end{enumerate}
-\item
+	\aufgabe{Aufgabe}\punkte{4}\\
 \vspace*{0.5cm}
-\textit{Behauptung: length(powset xs) = $2^{(length(xs))}$}
-
-\vspace*{0.5cm}
-\textbf{Induktionsanfang:} xs = [ ]\\
-length(powset [ ]) = $2^{(length([ ])} \stackrel{e.1}{=}$\\
-length(powset [ ]) = $2^1 \stackrel{powset.1}{=}$\\
-length([[ ]]) = $2^1 \stackrel{e.1}{=}$\\
-1 = $2^1 \equiv$\\
-1 = 1
+\textit{Behauptung: length(powset xs) = $2^{(length(xs))}$}\\
+\textbf{Induktionsanfang:} xs = [ ]
+\begin{alignat*}{2}
+&length(powset\phantom{.}[])&&=2^{(length\phantom{.}[])}\\
+\stackrel{e.1}{\equiv}&length(powset\phantom{.}[])&&=2^1\\
+\stackrel{pow.1}{\equiv}&length([[]])&&=2^1\\
+\stackrel{e.1}{\equiv}&1&&=2^1\\
+\equiv\phantom{.}&1&&=1
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für xs = xs' gilt:\\
 length(powset xs') = $2^{(length(xs'))}$
-
+\newpage
 \vspace*{0.5cm}
-\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
-length(powset (x:xs')) = $2^{(length(x:xs'))} \stackrel{powset.2}{=}$\\
-length(powset xs' ++ [x:ys $\mid ys <$- powset xs']) = $2^{(length(x:xs'))} \equiv$\\
-length(powset xs') + (length [x:ys $\mid ys <$- powset xs']) = $2^{(length(x:xs'))} \stackrel{nach IV}{=}$\\
-$2^{(length(xs'))}$ + (length [x:ys $\mid ys  <$- powset xs']) = $2^{(length(x:xs'))} \stackrel{e.1}{=}$\\
-$2^{(length(xs'))}$ + (length(powset xs') + 1) = $2^{(length(x:xs'))} \stackrel {nach IV}{=}$\\
-$2^{(length(xs'))} + 2^{((length(xs')) + 1)} = 2^{(length(x:xs'))} \equiv$\\
-$2^{(length(xs')} * 2^1 = 2^{(length(xs')} * 2^1$
+\textbf{Indukionsschritt:} Sei xs = (x:xs')
+\begin{alignat*}{2}
+&length(powset\phantom{.}(x:xs'))&&=2^{(length(x:xs'))}\\
+\stackrel{pow.2}{\equiv}&length(powset\phantom{.}xs'\phantom{.}++\phantom{.}[x:ys\phantom{.}|\phantom{.}ys \leftarrow powset\phantom{.}xs'])&&=2^{(length(x:xs'))}\\
+\equiv\phantom{.}&length(powset\phantom{.}xs')\phantom{.}+\phantom{.}(length\phantom{.}[x:ys\phantom{.}|\phantom{.}ys \leftarrow powset\phantom{.}xs'])&&=2^{(length(x:xs'))}\\
+\stackrel{nach IV}{\equiv}&2^{(length\phantom{.}xs')}\phantom{.}+\phantom{.}(length\phantom{.}[x:ys\phantom{.}|\phantom{.}ys\leftarrow powset\phantom{.}xs'])&&=2^{(length(x:xs'))}\\
+\stackrel{e.1}{\equiv}\phantom{.}&2^{(length\phantom{.}xs')}\phantom{.}+\phantom{.}(length(powset\phantom{.}xs')\phantom{.}+\phantom{.}1)&&=2^{(length(x:xs'))}\\
+\stackrel{nach IV}{\equiv}&2^{(length\phantom{.}xs')}\phantom{.}+\phantom{.}2^{((length\phantom{.}xs')\phantom{.}+\phantom{.}1)}&&=2^{(length(x:xs'))}\\
+\equiv\phantom{.}&2^{(length\phantom{.}xs')}\phantom{.}*\phantom{.}2^1&&=2^{(length\phantom{.}xs')}\phantom{.}*\phantom{.}2^1
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
 
-\item
+\aufgabe{Aufgabe}\bonuspunke{4}\\
 \vspace*{0.5cm}
-\textit{Behauptung: sumLeaves t = sumNodes t + 1}
-
-\vspace*{0.5cm}
-\textbf{Induktionsanfang:} Sei t = (Leaf x)\\
-sumLeaves (Leaf x) = sumNodes (Leaf x) + 1 $\stackrel{sumLeaves.1}{=}$\\
-1 = sumNodes (Leaf x ) + 1 $\stackrel{sumNodes.1}{=}$\\
-1 = 0 + 1 $\equiv$\\
-1 = 1
+\textit{Behauptung: sumLeaves t = sumNodes t + 1}\\
+\textbf{Induktionsanfang:} Sei t = (Leaf x)
+\begin{alignat*}{2}
+&sumLeaves\phantom{.}(Leaf\phantom{.}x)&&=sumNodes\phantom{.}(Leaf\phantom{.}x)\phantom{.}+\phantom{.}1\\
+\stackrel{sumL.1}{\equiv}&1&&=sumNodes\phantom{.}(Leaf\phantom{.}x)\phantom{.}+\phantom{.}1\\
+\stackrel{sumN.1}{\equiv}&1 &&= 0\phantom{.}+\phantom{.}1\\
+\equiv\phantom{.}&1&&=1
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Induktionsvorraussetzung:} für t = (Node x lt rt) gilt:\\
 sumLeaves lt = sumNodes lt + 1\\
-und\\
+\phantom{Kriegel }und\\
 sumLeaves rt = sumNodes rt + 1
 
 \vspace*{0.5cm}
-\textbf{Indukionsschritt:} Sei t = (Node x lt rt)\\
-sumLeaves (Node x lt rt) = sumNodes (Node x lt rt) + 1 $\stackrel{sumLeaves.2}{=}$\\
-sumLeaves lt + sumLeaves rt = sumNodes (Node x lt rt) + 1 $\stackrel{sumNodes.2}{=}$\\
-sumLeaves lt + sumLeaves rt = 1 + sumNodes lt + sumNodes rt + 1 $\stackrel{nach IV}{=}$\\
-sumNodes lt + 1 + sumNodes rt + 1 = 1 + sumNodes lt + sumNodes rt + 1 $\equiv$\\
-\textbf{sumNodes lt + sumNodes rt + 2 = sumNodes lt + sumNodes rt + 2}
+\textbf{Indukionsschritt:} Sei t = (Node x lt rt)
+\begin{alignat*}{2}
+&sumLeaves\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt)&&=sumNodes\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt)\phantom{.}+\phantom{.}1\\
+\stackrel{sumL.2}{\equiv}&sumLeaves\phantom{.}lt\phantom{.}+\phantom{.}sumLeaves\phantom{.}rt&&=sumNodes\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt)\phantom{.}+\phantom{.}1\\
+\stackrel{sumN.2}{\equiv}&sumLeaves\phantom{.}lt\phantom{.}+\phantom{.}sumLeaves\phantom{.}rt&&=1\phantom{.}+\phantom{.}sumNodes\phantom{.}lt\phantom{.}+\phantom{.}sumNodes\phantom{.}rt\phantom{.}+\phantom{.}1\\
+\stackrel{nach IV}{\equiv}&sumNodes\phantom{.}lt\phantom{.}+\phantom{.}1+\phantom{.}sumNodes\phantom{.}rt\phantom{.}+\phantom{.}1&&=1\phantom{.}+\phantom{.}sumNodes\phantom{.}lt\phantom{.}+\phantom{.}sumNodes\phantom{.}rt\phantom{.}+\phantom{.}1\\
+\equiv\phantom{.}&sumNodes\phantom{.}lt\phantom{.}+\phantom{.}sumNodes\phantom{.}rt\phantom{.}+\phantom{.}2&&=sumNodes\phantom{.}lt\phantom{.}+\phantom{.}sumNodes\phantom{.}rt\phantom{.}+\phantom{.}2
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle t (endliche Binärbäume) gilt.}
+
+\aufgabe{Aufgabe}\bonuspunke{6}\\
+\vspace*{0.5cm}
+\textit{Behauptung: sum\phantom{.}.\phantom{.}tree2List = sumTree}\\
+\textbf{Induktionsanfang 1.1:} Sei t = Nil
+\begin{alignat*}{2}
+&sum\phantom{.}.\phantom{.}tree2List\phantom{.}Nil &&= sumTree\phantom{.}Nil\\
+\stackrel{sumT.1}{\equiv}&sum\phantom{.}.\phantom{.}tree2List\phantom{.}Nil &&= 0\\
+\stackrel{t2L.1}{\equiv}&sum\phantom{.}[]&&=0\\
+\stackrel{sum.1}{\equiv}&0&&=0
+\end{alignat*}
+\textbf{Induktionsanfang 1.2:} Sei t = (Leaf x)
+\begin{alignat*}{2}
+&sum\phantom{.}.\phantom{.}tree2List\phantom{.}(Leaf\phantom{.}x)&&=sumTree\phantom{.}(Leaf\phantom{.}x)\\
+\stackrel{sumT.2}{\equiv}&sum\phantom{.}.\phantom{.}tree2List\phantom{.}(Leaf\phantom{.}x)&&=x\\
+\stackrel{t2L.2}{\equiv}&sum\phantom{.}[x]&&=x\\
+\equiv\phantom{.}&sum(x:[])&&=x\\
+\stackrel{sum.2}{\equiv}&x\phantom{.}+\phantom{.}sum\phantom{.}[]&&=x\\
+\stackrel{sum.1}{\equiv}&x\phantom{.}+\phantom{.}0&&=x\\
+\equiv\phantom{.}&x&&=x
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Induktionsvorraussetzung:} für t = (Node x lt rt) gilt:\\
+sum\phantom{.}.\phantom{.}tree2List lt = sumTree lt\\
+\phantom{Kriegel }und\\
+sum\phantom{.}.\phantom{.}tree2List rt = sumTree rt\\
+
+
+\textbf{Indukionsschritt:} Sei t = (Node x lt rt)
+\begin{alignat*}{2}
+&sum\phantom{.}.\phantom{.}list2Tree\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt)&&=sumTree\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt)\\
+\stackrel{sumT.3}{\equiv}&sum\phantom{.}.\phantom{.}list2Tree\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt)&&=x\phantom{.}+\phantom{.}sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt\\
+\stackrel{l2T.3}{\equiv}&sum(tree2List\phantom{.}lt\phantom{.}++\phantom{.}[x]\phantom{.}++\phantom{.}tree2List\phantom{.}rt)&&=x\phantom{.}+\phantom{.}sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt\\
+\equiv\phantom{.}&sum\phantom{.}[x]\phantom{.}+\phantom{.}(sum(tree2List\phantom{.}lt))\phantom{.}+\phantom{.}(sum(tree2List\phantom{.}rt))&&=x\phantom{.}+\phantom{.}sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt\\
+\stackrel{nach IV}{\equiv}&sum\phantom{.}[x]\phantom{.}+\phantom{.}sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt&&=x\phantom{.}+\phantom{.}+sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt\\
+\stackrel{nach IA}{\equiv}&x\phantom{.}+\phantom{.}sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt&&=x\phantom{.}+\phantom{.}sumTree\phantom{.}lt\phantom{.}+\phantom{.}sumTree\phantom{.}rt
+\end{alignat*}
 
 \vspace*{0.5cm}
 \textbf{Das bedeutet, dass die Behauptung für alle t (endliche Binärbäume) gilt.}
