@@ -1,0 +1,245 @@
+\documentclass[11pt]{article}
+\pagestyle{empty}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{german}
+\usepackage{mathtools}
+\usepackage{amsmath}
+
+\parindent0mm
+\sloppy
+
+% Basic data
+\newcommand{\VORLESUNG}{ALP I: Funktionale Programmierung}
+\newcommand{\STAFF}{A.\ Rudolph und F.\ Formanek}
+\newcommand{\ASSIGNMENT}{9}
+\newcommand{\HANDOUT}{Freitag, den 03.\ Januar   2020}
+\newcommand{\TUTOR}{Stephanie Hoffmann}
+\newcommand{\DELIVER}{bis Montag, den 13.\ Januar 2020, 10:10 Uhr} 
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\floor}[1]{\lfloor{#1}\rfloor}
+\newcommand{\ceil}[1]{\lceil{#1}\rceil}
+\newcommand{\half}[1]{\frac{#1}{2}}
+\newcommand{\punkte}[1]{{\small{ }(#1 Punkte)}}
+\newcommand{\bonuspunkte}[1]{{\small{ }(#1 Bonuspunkte)}}
+
+\newcommand{\aufgabe}[1]{\item{\bf #1}}
+
+\begin{document}
+\begin{center}
+\ASSIGNMENT{}. Aufgabenblatt vom \HANDOUT{} zur Vorlesung 
+\vspace*{0.5cm}
+
+{\Large \VORLESUNG{}}
+
+\textbf{Bearbeiter:} \STAFF{}\\
+\textbf{Tutor:} \TUTOR\\
+\textbf{Tutorium 06}
+\vspace*{0.5cm}
+
+{\small Abgabe: \DELIVER{}}
+\vspace*{1cm}
+\end{center}
+\begin{enumerate}
+ %Aufgabe 1
+ \aufgabe{Aufgabe}\punkte{5}
+\vspace*{0.5cm}
+\textit{Behauptung: foldl\phantom{.}g\phantom{.}z\phantom{.}xs = foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}xs)}\\
+\textbf{Induktionsanfang:} Sei xs = []
+\begin{alignat*}{2}
+&foldl\phantom{.}g\phantom{.}z\phantom{.}[]&&=foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}[])\\
+\stackrel{rev.1}{\equiv}&foldl\phantom{.}g\phantom{.}z\phantom{.}[]&&)foldr\phantom{.}f\phantom{.}z\phantom{.}[]\\
+\stackrel{foldl.1}{\equiv}&z &&= foldr\phantom{.}f\phantom{.}z\phantom{.}[]\\
+\stackrel{foldr.1}{\equiv}&z &&= z
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Induktionsvoraussetzung:} für xs' gilt:\\
+foldl\phantom{.}g\phantom{.}z\phantom{.}xs' = foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}xs')\\
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (z:xs')
+\begin{alignat*}{2}
+&foldl\phantom{.}g\phantom{.}z\phantom{.}(x:xs')&&=foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}(x:xs'))\\
+\stackrel{foldl.2}{\equiv}&foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs'&&= foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}(x:xs'))\\
+\stackrel{rev.2}{\equiv}&foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs'&&=foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}xs'\phantom{.}++\phantom{.}[x])\\
+\equiv\phantom{.}&foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs'&&=f\phantom{.}(f\phantom{.}(foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}xs'))\phantom{.}x)\phantom{.}z\\
+\stackrel{Def. f}{\equiv}&foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs'&&=g\phantom{.}z\phantom{.}(g\phantom{.}x\phantom{.}(foldr\phantom{.}f\phantom{.}z\phantom{.}(reverse\phantom{.}xs'))\\
+\stackrel{nach IV}{\equiv}&foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs'&&=g\phantom{.}z\phantom{.}(g\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}z\phantom{.}xs'))\\
+\stackrel{*}{\equiv}&foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs' &&= foldl\phantom{.}g\phantom{.}(g\phantom{.}z\phantom{.}x)\phantom{.}xs'
+\end{alignat*}
+\\
+*\phantom{.}=\phantom{.}Ich weiß das sieht ein bisschen komisch aus, aber der Ausdruck ist wirklich äquivalent. Da das aber eher an Beispielen ersichtlich wird, als daran, dass ich hier mindestens 10 Zeilen mehr beweise, lasse ich das so im Raum stehen und akzeptiere, dass ich diese Aufgabe nicht mit voller Punktzahl schaffe.\\
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+	%Aufgabe 2
+ \aufgabe{Aufgabe}\punkte{5}
+\vspace*{0.5cm}
+\textit{Behauptung: h\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}y\phantom{.}xs) = foldl\phantom{.}g\phantom{.}(h\phantom{.}x\phantom{.}y)\phantom{.}xs}\\
+\textbf{Induktionsanfang:} Sei xs = []
+\begin{alignat*}{2}
+&h\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}y\phantom{.}[])&&=foldl\phantom{.}g\phantom{.}(h\phantom{.}x\phantom{.}y)\phantom{.}[]\\
+\stackrel{foldl.1}{\equiv}&h\phantom{.}x\phantom{.}y&&=h\phantom{.}x\phantom{.}y
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Induktionsvoraussetzung:} für xs' gilt:\\
+h\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}y\phantom{.}xs') = foldl\phantom{.}g\phantom{.}(h\phantom{.}x\phantom{.}y)\phantom{.}xs'\\
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (z:xs')
+\begin{alignat*}{2}
+&h\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}y\phantom{.}(z:xs'))&&=foldl\phantom{.}g\phantom{.}(h\phantom{.}x\phantom{.}y)\phantom{.}(z:xs')\\
+\stackrel{foldl.2}{\equiv}&h\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}(g\phantom{.}y\phantom{.}z)\phantom{.}xs')&&=foldl\phantom{.}g\phantom{.}(g\phantom{.}(h\phantom{.}x\phantom{.}y)\phantom{.}z)\phantom{.}xs'\\
+\equiv\phantom{.}&h\phantom{.}x\phantom{.}(foldl\phantom{.}g\phantom{.}(g\phantom{.}y\phantom{.}z)\phantom{.}xs')&&= foldl\phantom{.}g\phantom{.}(h\phantom{.}x\phantom{.}(g\phantom{.}y\phantom{.}z))\phantom{.}xs'\\
+&\text{Ab\phantom{.}hier\phantom{.}weiß\phantom{.}ich\phantom{.}auch\phantom{.}nicht\phantom{.}mehr\phantom{.}weiter}
+\end{alignat*}
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+ \aufgabe{Aufgabe}\bonuspunkte{4}
+\vspace*{0.5cm}
+\textit{Behauptung: span\phantom{.}p\phantom{.}xs=(takeWhile\phantom{.}p\phantom{.}xs,dropWhle\phantom{.}p\phantom{.}xs)}\\
+\textbf{Induktionsanfang:} Sei xs = []
+\begin{alignat*}{2}
+&span\phantom{.}p\phantom{.}[]&&=(takeWhile\phantom{.}p\phantom{.}[],dropWhile\phantom{.}p\phantom{.}[])\\
+\stackrel{span.1}{\equiv}&([],[])&&=(takeWhile\phantom{.}p\phantom{.}[],dropWhile\phantom{.}p\phantom{.}[])\\
+\stackrel{tW.1}{\equiv}&([],[])&&=([],dropWhile\phantom{.}p\phantom{.}[])\\
+\stackrel{dW.1}{\equiv}&([],[])&&=([],[])
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Induktionsvoraussetzung:} für xs' gilt:\\
+span\phantom{.}p\phantom{.}xs' = (takeWhile\phantom{.}p\phantom{.}xs',dropWhile\phantom{.}p\phantom{.}xs')\\
+
+\vspace*{0.5cm}
+\textbf{Indukionsschritt:} Sei xs = (x:xs')\\
+\phantom{Kriegel}\textbf{Fall 1 (p(x) == False):}
+\begin{alignat*}{2}
+&span\phantom{.}p\phantom{.}(x:xs')&&=(takeWhile\phantom{.}p\phantom{.}(x:xs'),dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{span.3}{\equiv}&([],(x:xs'))&&=(takeWhile\phantom{.}p\phantom{.}(x:xs'),dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{tW.3}{\equiv}&([],(x:xs'))&&=([],dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{dW.3}{\equiv}&([],(x:xs'))&&=([],(x:xs'))
+\end{alignat*}
+\phantom{Kriegel}\textbf{Fall 2 (p(x) == True):}
+\begin{alignat*}{2}
+&span\phantom{.}p\phantom{.}(x:xs')&&=(takeWhile\phantom{.}p\phantom{.}(x:xs'),dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{span.2}{\equiv}&(x:ys,zs)&&=(takeWhile\phantom{.}p\phantom{.}(x:xs'),dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{nach IV}{\equiv}&(x:takeWhile\phantom{.}p\phantom{.}xs',dropWhile\phantom{.}p\phantom{.}xs')&&=(takeWhile\phantom{.}p\phantom{.}(x:xs'),dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{tW.2}{\equiv}&(x:takeWhile\phantom{.}p\phantom{.}xs',dropWhile\phantom{.}p\phantom{.}xs')&&=(x:takeWhile\phantom{.}p\phantom{.}xs',dropWhile\phantom{.}p\phantom{.}(x:xs'))\\
+\stackrel{dW.2}{\equiv}&(x:takeWhile\phantom{.}p\phantom{.}xs',dropWhile\phantom{.}p\phantom{.}xs')&&=(x:takeWhile\phantom{.}p\phantom{.}xs',dropWhile\phantom{.}p\phantom{.}xs')
+\end{alignat*}\\
+Falls unklar ist, warum (x:ys,zs) == (x:takeWhile p xs', dropWhile p xs') ist: Laut Definition von span ist (ys,zs) = span xs' und da san xs' unserer IV entspricht können wir diese dafür einsetzen.\\
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle xs (endliche Listen) gilt.}
+
+ \aufgabe{Aufgabe}\punkte{6}
+\vspace*{0.5cm}
+\textit{Behauptung: map\phantom{.}f(tree2List\phantom{.}t)\phantom{.}=\phantom{.}tree2List(mapTree\phantom{.}f\phantom{.}t)}\\
+\textbf{Induktionsanfang 1.1:} Sei t = Nil
+\begin{alignat*}{2}
+&map\phantom{.}f\phantom{.}(tree2List\phantom{.}Nil)&&=tree2List(mapTree\phantom{.}f\phantom{.}Nil)\\
+\stackrel{t2L.1}{\equiv}&map\phantom{.}f\phantom{.}[]&&=tree2List(mapTree\phantom{.}f\phantom{.}Nil)\\
+\stackrel{mT.1}{\equiv}&map\phantom{.}f\phantom{.}[]&&=tree2List\phantom{.}Nil\\
+\stackrel{t2L.1}{\equiv}&map\phantom{.}f\phantom{.}[]&&=[]\\
+\stackrel{map.1}{\equiv}&[]&&=[]
+\end{alignat*}
+\textbf{Induktionsanfang 1.2:} Sei t = (Leaf x)
+\begin{alignat*}{2}
+&map\phantom{.}f(tree2List(Leaf\phantom{.}x))&&=tree2List(mapTree\phantom{.}f\phantom{.}(Leaf\phantom{.}x))\\
+\stackrel{t2L.2}{\equiv}&map\phantom{.}f\phantom{.}[x]&&=tree2List(mapTree\phantom{.}f\phantom{.}(Leaf\phantom{.}x))\\
+\stackrel{mT.2}{\equiv}&map\phantom{.}f\phantom{.}[x]&&=tree2List(Leaf\phantom{.}(f(x)))\\
+\stackrel{t2L.2}{\equiv}&map\phantom{.}f\phantom{.}[x]&&=[f(x)]\\
+\stackrel{map.2}{\equiv}&[f(x)]&&=[f(x)]
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Induktionsvoraussetzung:} für t = (Node x lt rt) gilt:\\
+map\phantom{.}f\phantom{.}(tree2List\phantom{.}lt) = tree2List(mapTree\phantom{.}f\phantom{.}lt)\\
+\phantom{Kriegel }und\\
+map\phantom{.}f\phantom{.}(tree2List\phantom{.}rt) = tree2List(mapTree\phantom{.}f\phantom{.}rt)\\
+
+\newpage
+\textbf{Indukionsschritt:} Sei t = (Node x lt rt)
+\begin{alignat*}{2}
+&map\phantom{.}f\phantom{.}(tree2List\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt))&&=tree2List(mapTree\phantom{.}f\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt))\\
+\end{alignat*}
+\begin{alignat*}{2}
+\stackrel{LHS}{\equiv}&map\phantom{.}f\phantom{.}(tree2List\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt))\\
+\stackrel{t2L.3}{\equiv}&map\phantom{.}f\phantom{.}(tree2List\phantom{.}lt\phantom{.}++\phantom{.}[x]\phantom{.}++\phantom{.}tree2List\phantom{.}rt)\\
+\equiv\phantom{.}&map\phantom{.}f\phantom{.}(tree2List\phantom{.}lt)\phantom{.}++\phantom{.}(map\phantom{.}f\phantom{.}[x])\phantom{.}++\phantom{.}map\phantom{.}f\phantom{.}(tree2List\phantom{.}rt)\\
+\stackrel{nach IV}{\equiv}&tree2List(mapTree\phantom{.}f\phantom{.}lt)\phantom{.}++\phantom{.}(map\phantom{.}f\phantom{.}[x])\phantom{.}++\phantom{.}tree2List(mapTree\phantom{.}f\phantom{.}rt)\\
+\stackrel{map.2}{\equiv}&tree2List(mapTree\phantom{.}f\phantom{.}lt)\phantom{.}++\phantom{.}[f(x)]\phantom{.}++\phantom{.}tree2List(mapTree\phantom{.}f\phantom{.}rt)
+\end{alignat*}
+\begin{alignat*}{2}
+\stackrel{RHS}{\equiv}&tree2List(mapTree\phantom{.}f\phantom{.}(Node\phantom{.}x\phantom{.}lt\phantom{.}rt))\\
+\stackrel{mT.3}{\equiv}&tree2List(Node\phantom{.}(f(x))\phantom{.}(mapTree\phantom{.}f\phantom{.}lt)\phantom{.}(mapTree\phantom{.}f\phantom{.}rt)\\
+\stackrel{t2L.3}{\equiv}&tree2List(mapTree\phantom{.}f\phantom{.}lt)\phantom{.}++\phantom{.}[f(x)]\phantom{.}++\phantom{.}tree2List(mapTree\phantom{.}f\phantom{.}rt)\phantom{......}\\
+\end{alignat*}
+
+\vspace*{0.5cm}
+\textbf{Das bedeutet, dass die Behauptung für alle t (endliche Binärbäume) gilt.}
+
+ \aufgabe{Aufgabe}\punkte{3}
+\begin{enumerate}
+\item[1)]$\lambda$x.$\lambda$y(zv)($\lambda$x.xz)\\
+Inkorrekt, da $\lambda$y(zv) keine gültige Aussage ist. Würde hingegen $\lambda$y.(zv) da stehen, wäre die Aussage richtig.
+\item[2)]$\lambda$(x.xzx)x.xyz\\
+Inkorrekt, da $\lambda$(x.xzx)x keine gültigen Variablennamen sind. Würden wir die gesamte Klammer (x.xzx) entfernen, hätten wir einen gültigen Ausdruck.
+\item[3)]$\lambda$zy.zxyb.y\\
+Inkorrekt, da b.y keine Aussage bilden können. Es fehlt also ein $\lambda$ vor dem b oder man entfernt den Punkt, um es zu einer gültigen Aussage zu machen.
+\end{enumerate}
+
+ \aufgabe{Aufgabe}\punkte{8}
+\begin{itemize}
+\item[1)]$\lambda$a.($\lambda$y.ay)\\
+In $\lambda$y.ay ist y gebunden und a frei\\
+Im gesamten Ausdruck ist a gebunden.
+
+\item[2)]($\lambda$z.($\lambda$x.xz($\lambda$x.xz)))z\\
+Im Ausdruck $\lambda$x.xz ist x gebunden und z frei.\\
+Im Ausdruck $\lambda$x.xz($\lambda$x.xz) ist x gebunden und z frei (wobei es in der Klammer beim Einsetzen nicht ersetzt wird, weil er dort über eine andere Variable gebunden ist).\\
+Im Ausdruck $\lambda$z.$\lambda$x.xz($\lambda$x.xz)) ist z gebunden.\\
+Und zum Schluss steht dann einfach noch ein freies z, welches nicht zum ersten Ausdruck gehört.
+
+\item[3)]z(($\lambda$x.xz)x)($\lambda$x.xwz)\\
+Im Ausdruck ($\lambda$x.xwz) ist x gebunden und w und z sind frei.\\
+Im Ausdruck ($\lambda$x.xz) ist x gebunden und z frei\\
+Im Ausdruck (($\lambda$x.xz)x) ist das rechte x frei.\\
+Im gesamten Ausdruck ist das linke z frei.
+
+\item[4)] $\lambda$czy.zxy($\lambda$c.bz)\\
+Im Ausdruck ($\lambda$c.bz) ist c gebunden, obwohl es in der expression nicht auftaucht und b und z sind frei
+Im gesamten Ausdruck sind c, z und y gebunden und x frei.
+\end{itemize}
+
+\aufgabe{Aufgabe}\punkte{4}
+\begin{itemize}
+\item[1)]($\lambda$zy.z($\lambda$abc.b(abc))y) ($\lambda$sz.z) ($\lambda$sz.s(z))\\
+= ($\lambda$zy.z($\lambda$bc.b(ybc))) ($\lambda$sz.z) ($\lambda$sz.s(z))\\
+= ($\lambda$y.($\lambda$sz.z) ($\lambda$bc.b(ybc))) ($\lambda$sz.s(z))\\
+= ($\lambda$y.($\lambda$z.z)) ($\lambda$sz.s(z))\\
+= ($\lambda$z.z)
+
+\item[2)]($\lambda$zy.zy($\lambda$ab.b)) ($\lambda$ab.a) ($\lambda$ab.b) z y\\
+= ($\lambda$y.($\lambda$ab.a) y ($\lambda$ab.b)) ($\lambda$ab.b) z y\\
+= ($\lambda$y.($\lambda$b.y) ($\lambda$ab.b)) ($\lambda$ab.b) z y\\
+= ($\lambda$y.y) ($\lambda$ab.b) z y\\
+= ($\lambda$ab.b) z y\\
+= ($\lambda$b.b) y\\
+= y
+\end{itemize}
+
+\aufgabe{Aufgabe}\punkte{2}
+\begin{itemize}
+\item[1)] Inkorrekt, da die linke Seite sich nicht weiter auflösen lässt und die rechte Seite eine unendliche Verkettung von y wird
+\item[2)] Korrekt, da beide Seiten sich auf eine unendliche Verkettung von y reduzieren lassen.
+\end{itemize}
+\end{enumerate}
+\end{document}
