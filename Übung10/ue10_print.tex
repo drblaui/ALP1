@@ -1,0 +1,152 @@
+\documentclass[11pt]{article}
+\pagestyle{empty}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{german}
+\usepackage{mathtools}
+\usepackage{amsmath}
+
+\parindent0mm
+\sloppy
+
+% Basic data
+\newcommand{\VORLESUNG}{ALP I: Funktionale Programmierung}
+\newcommand{\STAFF}{A.\ Rudolph und F.\ Formanek}
+\newcommand{\ASSIGNMENT}{10}
+\newcommand{\HANDOUT}{Freitag, den 10.\ Januar   2020}
+\newcommand{\TUTOR}{Stephanie Hoffmann}
+\newcommand{\DELIVER}{bis Montag, den 20.\ Januar 2020, 10:10 Uhr} 
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\floor}[1]{\lfloor{#1}\rfloor}
+\newcommand{\ceil}[1]{\lceil{#1}\rceil}
+\newcommand{\half}[1]{\frac{#1}{2}}
+\newcommand{\punkte}[1]{{\small{ }(#1 Punkte)}}
+\newcommand{\bonuspunkte}[1]{{\small{ }(#1 Bonuspunkte)}}
+
+\newcommand{\aufgabe}[1]{\item{\bf #1}}
+
+\begin{document}
+\begin{center}
+\ASSIGNMENT{}. Aufgabenblatt vom \HANDOUT{} zur Vorlesung 
+\vspace*{0.5cm}
+
+{\Large \VORLESUNG{}}
+
+\textbf{Bearbeiter:} \STAFF{}\\
+\textbf{Tutor:} \TUTOR\\
+\textbf{Tutorium 06}
+\vspace*{0.5cm}
+
+{\small Abgabe: \DELIVER{}}
+\vspace*{1cm}
+\end{center}
+
+\begin{enumerate}
+\aufgabe{Aufgabe}\punkte{5}
+
+Sei a ein beliebiger Ausdruck, bzw eine beliebige Variable\\
+I a $\equiv$ ($\lambda$x.x) a = a\\
+v F a $\equiv$ ($\lambda$xy.xTy) ($\lambda$xy.y) a = ($\lambda$y.($\lambda$xy.y)Ty) a = ($\lambda$xy.y) T  a = ($\lambda$y.y) a = a\\
+F $\neg$ a $\equiv$ ($\lambda$xy.y) $\neg$ a = ($\lambda$y.y) a = a\\
+$\Rightarrow also: I \equiv \lor F \equiv F\neg$
+ 
+\aufgabe{Aufgabe}\punkte{6}
+
+E = Gleichheitsfunktion aus der Vorlesung, $\neg$ = Negationsfunktion aus der Vorlesung
+\textbf{$\neq$ $\equiv$ $\lambda$xy.$\neg$(E x y)}\\
+Beweis mit 2 und 4:\\
+$\neq$ 2 4 $\equiv$ ($\lambda$xy.$\neg$(E x y)) 2 4 = $\neg$(E 2 4) = $\neg$F = T\\
+
+Wir gehen davon aus, dass das Aussehen und auch die Funktionsweise von E und $\neg$ aus der Vorlesung bekannt sind und nicht weiter ausgeführt werden müssen.\\
+
+G = $\geq$ und $\land$ aus der Vorlesung, $\neq$ siehe oben\\
+\textbf{$>$ $\equiv$ $\lambda$xy.$\land$ (G x y) ($\neq$ x y)}\\
+Beweis mit 2 und 4:\\
+$>$ 2 4 $\equiv$ ($\lambda$xy.$\land$ (G x y) ($\neq$ x y)) 2 4 = $\land$ (G 2 4) ($\neq$ 2 4) = $\land$ (F) (F) = F\\
+
+Auch hier gehen wir davon aus, dass das Aussehen sowie auch die Funktionsweise von G und $\land$ bekannt sind und nicht weiter ausgeführt werden müssen.\\
+
+L = (Z(y P x)), $\land$ aus der Volesung und $\neq$ siehe oben\\
+\textbf{$<$ $\equiv$ $\lambda$xy.$\land$ (L x y) ($\neq$ x y)}\\
+Beweis mit 2 und 4:\\
+$<$ 2 4 $\equiv$ ($\lambda$xy.$\land$ (L x y) ($\neq$ x y)) 2 4 = $\land$ (L 2 4) ($\neq$ 2 4) = $\land$ (T) (T) = T\\
+
+Hier wird natürlich auch davon ausgegangen, dass $\land$ bekannt ist, deswegen wird es mal wieder nicht ausgeführt.\\
+\newpage
+\aufgabe{Aufgabe}\punkte{4}\\
+\textbf{$\lambda$xy.xxy}\\
+Beweis mit TF:\\
+($\lambda$xy.xxy)($\lambda$xy.x)($\lambda$xy.y) = ($\lambda$xy.x) ($\lambda$xy.x) ($\lambda$xy.y) = ($\lambda$y.($\lambda$xy.x))($\lambda$xy.y) = $\lambda$xy.x $\equiv$ T\\
+Beweis mit FT:\\
+($\lambda$xy.xxy)($\lambda$xy.y)($\lambda$xy.x) = ($\lambda$xy.y) ($\lambda$xy.y) ($\lambda$xy.x) = ($\lambda$y.y) ($\lambda$xy.x) = $\lambda$xy.x $\equiv$ T\\
+Beweis mit TT:\\
+($\lambda$xy.xxy)($\lambda$xy.x)($\lambda$xy.x) = ($\lambda$xy.x) ($\lambda$xy.x) ($\lambda$xy.x) = ($\lambda$y.($\lambda$xy.x)) ($\lambda$xy.x) = $\lambda$xy.x $\equiv$ T\\
+Beweis mit FF:\\
+($\lambda$xy.xxy)($\lambda$xy.y)($\lambda$xy.y) = ($\lambda$xy.y) ($\lambda$xy.y) ($\lambda$xy.y) = ($\lambda$y.y) ($\lambda$xy.y) = $\lambda$xy.y $\equiv$ F 
+
+$\Rightarrow$ Das ist dasselbe verhalten, wie das logische Oder auf Wahrheitswerte angewendet
+\aufgabe{Aufgabe}\punkte{4}
+
+\textbf{f $\equiv$ Y ($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1)))))}\\
+Da sowohl +, als auch *, -, Z und Y in der Vorlesung besprochen wurden, gehen wir davon aus, dass sie trivial sind. Zur Auffrischung: + = Addition, * = Multiplikation, - = Subtraktion, Z testet ob eine Zahl = 0 ist und Y ist die Funktion, die uns bei der Rekursion hilft.\\
+Beweis mit f(4) (Was übrigens unglaublich gemein von Frau Esponda ist):\\
+Aus Platzsparenden gründen, sei ($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1))))) definiert als f*\\
+f 4 $\equiv$ Y f* 4 = f* (Y F*) 4\\
+$\Rightarrow$ ($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1))))) (Y f*) 4\\
+$\Rightarrow$ (Z 4 0 (+ 1 (* 2 ((Y f*) 3))))\\
+$\Rightarrow$ (+ 1 (* 2 (f* (Y f*) 3)))\\
+$\Rightarrow$ (+ 1 (* 2 ((($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1))))) (Y f*) 3)))\\
+$\Rightarrow$ (+ 1 (* 2 (Z 3 0 (+ 1 (* 2 ((Y f*) 2))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (f* (Y f*) 2)))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1))))) (Y f*) 2)))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (Z 2 0 (+ 1 (* 2 ((Y f*) 1))))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (f* (Y f*) 1)))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1))))) (Y f*) 1)))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (Z 1 0 (+ 1 (* 2 ((Y f*) 0))))))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (f* (Y f*) 0)))))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (($\lambda$rn.Z n 0 (+ 1 (* 2 (r (- n 1))))) (Y f*) 0)))))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (Z 0 0 (+ 1 (* 2 ((Y f*) 0))))))))))))
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 0))))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 (+ 1 0)))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 (* 2 1))))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 (+ 1 2)))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 (* 2 3))))\\
+$\Rightarrow$ (+ 1 (* 2 (+ 1 6)))\\
+$\Rightarrow$ (+ 1 (* 2 7))\\
+$\Rightarrow$ (+ 1 14)\\
+$\Rightarrow$ 15 $\rightarrow$ Wahre Aussage\\
+
+\aufgabe{Aufgabe}\punkte{4}
+
+Wenn eine ganze Zahl (a,b) als a-b definiert ist, dann ist die Subtraktion für die ganzen Zahlen (a,b) - (c,d) definiert als: (a+d,b+c). Die zugehörige Lambda-Funktion ist folgende:\\
+$\lbrace$SUB$\rbrace$ $\equiv$ ($\lambda$ab.($\lambda$z.z ((a T) S (b F)) ((a F) S (b T))))\\
+Wobei T das erste Element und F das zweite Element eines Tuples ausgibt und S die Nachfolgerfunktion ist.\\
+Die Multiplikation für ganze Zahlen (a,b) * (c,d) ist definiert als: (a*c + b*d,a*d + b*c). Die zugehörige Lambda-Funktion ist folgende:\\
+$\lbrace$MUL$\rbrace$ $\equiv$\\ ($\lambda$ab.($\lambda$z.z (+ (* (a T) (b T)) (* (a F) (b F))) (+ (* (a T) (b F)) (* (a F) (b T))))))\\
+Wobei T F die Definition von oben beibehalten und + und * die Addition und Multiplikation für Natürliche Zahlen sind.
+
+\aufgabe{Aufgabe}\punkte{3}
+
+Zuerst die Idee dahinter, damit der Ausdruck klar wird:\\
+Wir gucken, ob im Tupel (a,b) a $>$ b ist. Ist es das, macht es mehr Sinn unsere Zahl so zu vereinfachen, dass an zweiter Stelle eine 0 steht und an erster a-b. Tritt das nicht ein, ist also a $<$= b, setzen wir die erste Stelle gleich 0 und die zweite gleich b - a. In Haskell würde das so aussehen:\\
+simp (a,b) $|$ (a $>$ b) = (a-b,0)\\
+\phantom{simp (a,b) }$|$ otherwise = (0, b - a)\\
+Als Lambda-Funktion haben wir dann:\\
+$\lbrace$SIMP$\rbrace$ $\equiv$\\ $\lambda$a.($\lambda$z.z(($>$ (a T) (a F)) (- (a T) (a F)) 0) (($<$ (a T) (a F)) (- (a F) (a T)) 0)))\\
+Erneut sind T und F unsere Tupel Funktionen. - ist die Subtraktion für Natürliche Zahlen und sowohl $>$ als auch $<$ wurden auf diesem Blatt auch bereits definiert.
+
+\aufgabe{Aufgabe}\punkte{4}
+
+Die Idee hinter $>$ für ganze Zahlen:
+Wenn wir die Zahlen vereinfachen (also irgendwo muss eine 0 stehen) und dann gucken, ob aus den Tupeln (a,b) (c,d) a == c ist und wir danach checken, ob a == 0 ist, ist c automatisch 0. Das heißt wir müssen nur gucken, ob b $>$ d ist und das Ergebnis ausgeben.\\ Bleiben wir bei dem Fall, dass a == c ist: Tritt auf, dass a != 0 (und somit auch gleich c != 0) ist, müssen b und d == 0 seinen, da die Zahl ja vereinfacht wurde. Also müssen wir hier nur a $>$ c prüfen und das Ergebnis ausgeben.\\
+Ist von Anfang an a != c, heißt das auch wieder automatisch, dass b == d == 0 ist. Also müssen wir auch nur hier das Ergebnis von a $>$ c ausgeben. Also lautet die Lambda-Funktion: \\
+$>$ $\equiv$\\ (($\lambda$xy.($\lambda$ab.(E (a T) (b T)) ((Z (a T)) ($>$ (a F) (b F)) ($>$ (a T) (b T)))) ($\lbrace$SIMP$\rbrace$ x) ($\lbrace$SIMP$\rbrace$ y))\\
+Die Idee hinter $\neq$ ist einfacher: Wenn wir die Zahlen zuerst vereinfachen und dann prüfen, ob a == c und b == d ist, ist das negierte verundete Ergebnis davon unser Output. Unsere Funktion ist also: \\
+$\neq$ $\equiv$ (($\lambda$xy.($\lambda$ab.$\land$ (E (a T) (b T)) (E (a F) (b F)))) ($\lbrace$SIMP$\rbrace$ x) ($\lbrace$SIMP$\rbrace$ y))
+\end{enumerate}
+\end{document}
