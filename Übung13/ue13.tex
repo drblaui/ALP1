@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+\pagestyle{empty}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{german}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\parindent0mm
+\sloppy
+
+% Basic data
+\newcommand{\VORLESUNG}{ALP I: Funktionale Programmierung}
+\newcommand{\STAFF}{A.\ Rudolph}
+\newcommand{\ASSIGNMENT}{13}
+\newcommand{\HANDOUT}{Freitag, den 31.\ Januar   2020}
+\newcommand{\TUTOR}{Stephanie Hoffmann}
+\newcommand{\DELIVER}{bis Montag, den 10.\ Februar 2020, 10:10 Uhr} 
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\floor}[1]{\lfloor{#1}\rfloor}
+\newcommand{\ceil}[1]{\lceil{#1}\rceil}
+\newcommand{\half}[1]{\frac{#1}{2}}
+\newcommand{\punkte}[1]{{\small{ }(#1 Punkte)}}
+\newcommand{\bonuspunkte}[1]{{\small{ }(#1 Bonuspunkte)}}
+
+\newcommand{\aufgabe}[1]{\item{\bf #1}}
+
+\begin{document}
+\begin{center}
+\ASSIGNMENT{}. Aufgabenblatt vom \HANDOUT{} zur Vorlesung 
+\vspace*{0.5cm}
+
+{\Large \VORLESUNG{}}
+
+\textbf{Bearbeiter:} \STAFF{}\\
+\textbf{Tutor:} \TUTOR\\
+\textbf{Tutorium 06}
+\vspace*{0.5cm}
+
+{\small Abgabe: \DELIVER{}}
+\vspace*{1cm}
+\end{center}
+
+\begin{enumerate}
+\aufgabe{Aufgabe}\punkte{2}
+f: $\mathbb{N}^3 \rightarrow \mathbb{N}$ mit f(x,y,z) = p(x) * h(z,x,y) + k(z)\\
+\newline
+f(x,y,z) = add(mult(p($\Pi_1^3$(x,y,z)),h($\Pi_3^3$(x,y,z),$\Pi_1^3$(x,y,z),$\Pi_2^3$(x,y,z))),k($\Pi_3^3$(x,y,z)))\\
+\newline
+$\Rightarrow$Reduzierbar zu: add $\circ$ [mult $\circ$ [(p $\circ$ $\Pi_1^3$), h $\circ$ [$\Pi_3^3$, $\Pi_1^3$, $\Pi_2^3$]], (k $\circ$ $\Pi_3^3$)](x,y,z)\\
+Somit ist die Funktion f primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen(p,h,k sind laut Aufgabe und add, mult laut Vorlesung primitiv rekursiv) konstruieren lässt.\\
+
+\aufgabe{Aufgabe}\punkte{4}
+\begin{enumerate}
+\item[a)] max: $\mathbb{N}^2 \rightarrow \mathbb{N}$ mit max(x,y) = y falls x $\leq$ y und max(x,y) = x, falls nicht.\\
+\newline
+max(x,y) = sub(add($\Pi_1^2$(x,y), $\Pi_2^2$(x,y)), min($\Pi_1^2$(x,y),$\Pi_2^2$(x,y)))\\
+\newline
+$\Rightarrow$Reduzierbar zu: sub $\circ$ [add $\circ$ [$\Pi_1^2$,$\Pi_2^2$], min $\circ$ [$\Pi_1^2$,$\Pi_2^2$]](x,y)\\
+Somit ist die Funktion max primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen(add, sub, $min^{(1)}$ sind laut Vorlesung primitiv rekursiv) konstruieren lässt.\\
+\newline
+\newline
+$\phantom{.}^{(1)}$ Da min nicht in den Vorlesungsfolien steht, sie aber an der Tafel gemacht wurde, hier nochmal die Definition:\\
+\newline
+min(x,y) = sub $\circ$ [$\Pi_1^2$,sub $\circ$ [$\Pi_1^2$,$\Pi_2^2$]](x,y)\\
+
+\item[b)]fac: $\mathbb{N} \rightarrow \mathbb{N}$ mit 0! = 1 und $n! = \displaystyle \prod_{k=1}^n k$\\
+fac(0) = $C_1^0$\\
+fac(S(n)) = mult(S($\Pi_2^2$(fac(n),n)),$\Pi_1^2$(fac(n),n))\\
+\newline
+Somit ist die Funktion fac primitiv rekursiv, da sie sich nach dem Rekursionsschema und mithilfe von primitiv rekursiven Funktionen aufstellen lässt.
+\end{enumerate}
+\newpage
+
+\aufgabe{Aufgabe}\punkte{4}
+\begin{itemize}
+\item[a)]and: $\mathbb{N}^2 \rightarrow \mathbb{N}$\\
+\newline
+and(x,y) = mult($\Pi_1^2$(x,y),$\Pi_2^2$(x,y))\\
+\newline
+$\Rightarrow$Reduzierbar zu: mult $\circ$ [$\Pi_1^2$,$\Pi_2^2$] (x,y)\\
+Somit ist die Funktion and primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen aufstellen lässt.\\
+
+\item[b)]equal: $\mathbb{N}^2 \rightarrow \mathbb{N}$\\
+\newline
+equal(x,y) = and(isZero(sub($\Pi_1^2$(x,y),$\Pi_2^2$(x,y))),isZero(sub($\Pi_2^2$(x,y),$\Pi_1^2$(x,y))))\\
+\newline
+$\Rightarrow$Reduzierbar zu: and $\circ$ [isZero $\circ$ sub $\circ$ [$\Pi_1^2$,$\Pi_2^2$],isZero $\circ$ sub $\circ$ [$\Pi_2^2$,$\Pi_1^2$]](x,y)\\
+Somit ist die Funktion equal primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen($isZero^{(2)}$ ist laut Vorlesung primitiv rekursiv) konstruieren lässt.\\
+\newline
+\newline
+$\phantom{.}^{(2)}$ Da isZero nicht in den Vorlesungsfolien steht, sie aber an der Tafel gemacht wurde, hier nochmal die Definition:\\
+\newline
+isZero(0) = $C_1^0$\\
+isZero(S(n)) = $C_0^2$(isZero n, n)\\
+\end{itemize}
+
+\aufgabe{Aufgabe}\punkte{10}
+\begin{itemize}
+\item[a)]f: $\mathbb{N}^3 \rightarrow \mathbb{N}$ mit $f(x,y,z) = x + \frac{(x+z) * (z+y+2)}{2}$\\
+\newline
+f(x,y,z) = add($\Pi_1^3$(x,y,z),half(mult(add($\Pi_1^3$(x,y,z),$\Pi_3^3$(x,y,z)),add(add($\Pi_3^3$(x,y,z),$\Pi_2^3$(x,y,z)),$C_2^3$(x,y,z)))))\\
+\newline
+$\Rightarrow$Reduzierbar zu: add $\circ$ [$\Pi_1^3$,half $\circ$ mult $\circ$ [add $\circ$ $\Pi_1^3$,$\Pi_3^3$],add $\circ$ [add $\circ$ [$\Pi_3^3$,$\Pi_2^3$],$C_2^3$]](x,y,z)\\
+Somit ist die Funktion f primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen($half^{(3)}$ ist laut Vorlesung primitiv rekursiv) konstruieren lässt.\\
+\newline
+$\phantom{.}^{(3)}$ Da half nicht in den Vorlesungsfolien steht, sie aber an der Tafel gemacht wurde, hier nochmal die Definition plus die Definiton von ungerade, da diese auch gebraucht wird:\\
+\newline
+half(0) = $C_0^0$\\
+half(S(n)) = add(half n, ungerade (n))\\
+\newline
+ungerade(0) = $C_0^0$\\
+ungerade(S(n)) = isZero($\Pi_1^2$(ungerade(n),n))\\
+\newpage
+
+\item[b)]p: $\mathbb{N} \rightarrow \mathbb{N}$ mit $p(n) = 2^n - 1$\\
+\newline
+p(n) = sub(exp($C_2^1$(n),$\Pi_1^1$(n)),$C_1^1$(n))\\
+\newline
+$\Rightarrow$Reduzierbar zu: sub $\circ$ [exp $\circ$ [$C_2^1$,$\Pi_1^1$],$C_1^1$](n)\\
+Somit ist die Funktion p primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen ($exp^{(4)}$ ist laut Vorlesung primitiv rekursiv) konstruieren lässt.
+\newline
+$\phantom{.}^{(4)}$ Da exp nicht in den Vorlesungsfolien steht, sie aber an der Tafel gemacht wurde, hier nochmal die Definition:\\
+exp(x,y) = exp'($\Pi_2^2$(x,y),$\Pi_1^2$(x,y))\\
+\newline
+exp'(0,m) = $C_1^1$(m)\\
+exp'(S(n),m) = mult $\circ$ [$\Pi_1^3$,$\Pi_3^3$](exp'(n,m),n,m)\\
+
+\item[c)]abst: $\mathbb{N}^2 \rightarrow \mathbb{N}$ mit $ abst(n,m) = \begin{cases} (n-m), & \text{wenn } n > m\\ (m-n), & \text{wenn } n \leq m \end{cases}$\\
+\newline
+abst(n,m) = sub(max($\Pi_1^2$(n,m),$\Pi_2^2$(n,m)),min($\Pi_1^2$(n,m),$\Pi_2^2$(n,m)))\\
+\newline
+$\Rightarrow$Reduzierbar zu: sub $\circ$ [max $\circ$ [$\Pi_1^2$,$\Pi_2^2$],min $\circ$ [$\Pi_1^2$,$\Pi_2^2$]](n,m)\\
+Somit ist die Funktion abst primitiv rekursiv, da sie sich mit primitiv rekursiven Funktionen konstruieren lässt.\\
+
+\item[d)]f: $\mathbb{N} \rightarrow \mathbb{N}$ mit $f(n) = \begin{cases} 1, &\text{wenn } n = 0\\ f(n-1)+n, &\text{sonst} \end{cases}$\\
+\newline
+f(0) = $C_1^0$\\
+f(S(n)) = add($\Pi_1^2$(f(n),n),$\Pi_2^2$(f(n),n))\\
+\newline
+Somit ist die Funktion f primitiv rekursiv, da sie sich nach dem Rekursionsschema aufstellen lässt.
+\end{itemize}
+
+\aufgabe{Aufgabe}\punkte{10}
+Ich habe jede Funktion getestet und sie hat mir richtige Ergebnisse ausgegeben. Bei (durchaus angebrachten) Missvertrauen von meiner Richtigkeit, bitte die extra hochgeladene Haskell Datei ansehen.
+\end{enumerate}
+
+\end{document}

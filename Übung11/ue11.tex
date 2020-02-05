@@ -1,0 +1,81 @@
+\documentclass[11pt]{article}
+\pagestyle{empty}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{german}
+\usepackage{mathtools}
+\usepackage{amsmath}
+
+\parindent0mm
+\sloppy
+
+% Basic data
+\newcommand{\VORLESUNG}{ALP I: Funktionale Programmierung}
+\newcommand{\STAFF}{A.\ Rudolph}
+\newcommand{\ASSIGNMENT}{11}
+\newcommand{\HANDOUT}{Freitag, den 17.\ Januar   2020}
+\newcommand{\TUTOR}{Stephanie Hoffmann}
+\newcommand{\DELIVER}{bis Montag, den 27.\ Januar 2020, 10:10 Uhr} 
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\floor}[1]{\lfloor{#1}\rfloor}
+\newcommand{\ceil}[1]{\lceil{#1}\rceil}
+\newcommand{\half}[1]{\frac{#1}{2}}
+\newcommand{\punkte}[1]{{\small{ }(#1 Punkte)}}
+\newcommand{\bonuspunkte}[1]{{\small{ }(#1 Bonuspunkte)}}
+
+\newcommand{\aufgabe}[1]{\item{\bf #1}}
+
+\begin{document}
+\begin{center}
+\ASSIGNMENT{}. Aufgabenblatt vom \HANDOUT{} zur Vorlesung 
+\vspace*{0.5cm}
+
+{\Large \VORLESUNG{}}
+
+\textbf{Bearbeiter:} \STAFF{}\\
+\textbf{Tutor:} \TUTOR\\
+\textbf{Tutorium 06}
+\vspace*{0.5cm}
+
+{\small Abgabe: \DELIVER{}}
+\vspace*{1cm}
+\end{center}
+
+\begin{enumerate}
+\aufgabe{Aufgabe}\punkte{4}
+Aus der Aufgabe wird nicht wirklich ersichtlich welche Ausgaben die Funktion wann machen soll, aber ich nehme mal an es ist so wie es hintereinander da steht. Ist also Liste A $<$ Liste B, erhalten wir 1. Sind beide gleich, bekommen wir 0 und ist B $<$ A erhalten wir -1. Außerdem gehe ich davon aus, dass die Lambda Ausdrücke für die Zahlen 0, 1 und -1 bekannt und trivial sind. Zusätzlich wurden auch $\lbrace$NIL$\rbrace$ und $\lbrace$TAIL$\rbrace$ in der Vorlesung gegeben und deren Funktionsweise ist klar, also wird hier nicht ausgeführt, wie sie aussehen, sondern sie werden einfach angenommen.\\
+\newline
+$\leq$ $\equiv$ (Y($\lambda$rab.$\lbrace$NIL$\rbrace$ a (($\lbrace$NIL$\rbrace$ b) 0 1) (($\lbrace$NIL$\rbrace$ b) ($\lbrace$NIL$\rbrace$ a) 0 -1) (r ($\lbrace$TAIL$\rbrace$ a) ($\lbrace$TAIL$\rbrace$ b))))
+
+\aufgabe{Aufgabe}\punkte{8}
+Hier kommt nicht so ein langer Text. Wir nehmen an, dass NIL (Testet ob Liste leer ist), HEAD (Erstes Element einer Liste), TAIL (Rest einer Liste), E (Gleichheitsoperator und T, F (Wahrheitswerte) bekannt sind.
+\begin{enumerate}
+\item $\lbrace$ELEM$\rbrace$ $\equiv$ (Y($\lambda$rxa.$\lbrace$NIL$\rbrace$ a F ((E x ($\lbrace$HEAD$\rbrace$ a)) T (r x ($\lbrace$TAIL$\rbrace$ a)))))
+
+\item $\lbrace$REMOVE$\rbrace$ $\equiv$ (Y($\lambda$rab.$\lbrace$NIL$\rbrace$ a (T,$\_$,$\_$) ((E x $\lbrace$HEAD$\rbrace$ a) ($\lbrace$TAIL$\rbrace$ a) (F, ($\lbrace$HEAD$\rbrace$ a), (r x $\lbrace$TAIL$\rbrace$ a)))
+\end{enumerate}
+
+\aufgabe{Aufgabe}\punkte{7}
+Falls diese Funktionen noch getestet werden sollen, sind sie in der beiliegenden Haskell Datei zu finden.
+\begin{enumerate}
+\item (2 **) $\equiv$ $\setminus$x $->$ x * x * 1.0\\
+Erklärung: x * x simuliert die Zweierpotenz und das * 1.0 wandelt den Integer in ein Double um, da (2 **) immer einen Double ausgibt.\\
+\newline
+(f.g.h) $\equiv$ $\setminus$x $->$ f(g(h(x)))\\
+Erklärung: (f.g.h) ist einfach nur die Funktion f angewendet auf das Ergebnis von g angewendet auf das Ergebnis von h(x)
+
+\item reverse' ys = foldl ($\setminus$xs x $->$ x:xs) [ ] ys\\
+Erklärung: Die Eingabeliste wird gefaltet und die anonyme Faltungsfunktion Nimmt die Liste und das letzte Element und setzt das an den Anfang der Restliste 
+\end{enumerate}
+\newpage
+\aufgabe{Aufgabe}\punkte{5}
+Warum auch immer das mit der fix Funktion gemacht werden sollte, ich bekomme es nicht hin. Also (in der Hoffnung auf ein paar Punkte) hier eine anonyme Funktion, die die Collatz Folge genau so berechnet, wie gefordert, aber ohne fix:\\
+$collatz$ = $\setminus$x $->$ if (x == 1) then [1] else (if (mod x 2 == 0) then x:(collatz (div x 2)) else x:(collatz (x * 3 + 1)))
+\end{enumerate}
+
+\end{document}

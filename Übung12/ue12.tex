@@ -1,0 +1,169 @@
+\documentclass[11pt]{article}
+\pagestyle{empty}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{german}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\parindent0mm
+\sloppy
+
+% Basic data
+\newcommand{\VORLESUNG}{ALP I: Funktionale Programmierung}
+\newcommand{\STAFF}{A.\ Rudolph}
+\newcommand{\ASSIGNMENT}{11}
+\newcommand{\HANDOUT}{Freitag, den 24.\ Januar   2020}
+\newcommand{\TUTOR}{Stephanie Hoffmann}
+\newcommand{\DELIVER}{bis Montag, den 03.\ Februar 2020, 10:10 Uhr} 
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\floor}[1]{\lfloor{#1}\rfloor}
+\newcommand{\ceil}[1]{\lceil{#1}\rceil}
+\newcommand{\half}[1]{\frac{#1}{2}}
+\newcommand{\punkte}[1]{{\small{ }(#1 Punkte)}}
+\newcommand{\bonuspunkte}[1]{{\small{ }(#1 Bonuspunkte)}}
+
+\newcommand{\aufgabe}[1]{\item{\bf #1}}
+
+\begin{document}
+\begin{center}
+\ASSIGNMENT{}. Aufgabenblatt vom \HANDOUT{} zur Vorlesung 
+\vspace*{0.5cm}
+
+{\Large \VORLESUNG{}}
+
+\textbf{Bearbeiter:} \STAFF{}\\
+\textbf{Tutor:} \TUTOR\\
+\textbf{Tutorium 06}
+\vspace*{0.5cm}
+
+{\small Abgabe: \DELIVER{}}
+\vspace*{1cm}
+\end{center}
+
+\begin{enumerate}
+\aufgabe{Aufgabe}\punkte{2}
+\textit{S(KK)I = K}\\
+Wir zeigen die Äquivalenz durch das einsetzen von 2 beliebigen Ausdrücken a und b:\\
+K a b = a
+\newline
+S(KK)I a b
+$\Rightarrow$ ((KK) a (I a)) b
+$\Rightarrow$ ((KK) a a) b
+$\Rightarrow$ K a b
+$\Rightarrow$ a
+\newline
+\textbf{Die Ausdrücke sind äquivalent}
+
+\aufgabe{Aufgabe}\punkte{6}
+\textit{SS(SI(K(KI)))(KK(S(KK)I))(KI)}\\
+$\Rightarrow$(SS(S(K(KI)))(KK(S(KK)I))(KI))             \hfill (Identität)\\
+$\Rightarrow$(SS(S(K)))(KK(S(KK)I))(KI))                 \hfill (Kanzellator)\\
+$\Rightarrow$(SK(SK))(KK(S(KK)I))(KI))                   \hfill (Funktionsapplikation)\\
+$\Rightarrow$(KK(KS))(KK(S(KK)I))(KI))                   \hfill (Funktionsapplikation)\\
+$\Rightarrow$(K)(KK(S(KK)I))(KI))                        \hfill (Kanzellator)\\
+$\Rightarrow$(KK(S(KK)I))                                \hfill (Kanzellator)\\
+$\Rightarrow$K                                           \hfill (Kanzellator) 
+\newline
+\newline
+\textit{S(SI(K(II)))(S(S(KK)I))IS(KKI)}\\
+$\Rightarrow$(SI(K(II)))I((S(S(KK)I))I)S(KKI)            \hfill (Funktionsapplikation)\\
+$\Rightarrow$II((K(II))I)((S(S(KK)I))I)S(KKI)             \hfill (Funktionsapplikation)\\
+$\Rightarrow$((K(II))I)((S(S(KK)I))I)S(KKI)              \hfill (Identität)\\
+$\Rightarrow$(II)((S(S(KK)I))I)S(KKI)                     \hfill (Kanzellator)\\
+$\Rightarrow$((S(S(KK)I))I)S(KKI)                        \hfill (Identität)\\
+$\Rightarrow$(S(KK)I)S(IS)(KKI)                          \hfill (Funktionsapplikation)\\
+$\Rightarrow$((KK)S(IS))(IS)(KKI)                        \hfill (Funktionsapplikation)\\
+$\Rightarrow$((K)(IS))(IS)(KKI)                          \hfill (Kanzellator)\\
+$\Rightarrow$(IS)(KKI)                                   \hfill (Kanzellator)\\
+$\Rightarrow$(S)(KKI)                                    \hfill (Identität)\\
+$\Rightarrow$(KI(KI))                                    \hfill (Funktionsapplikation)\\
+$\Rightarrow$I                                           \hfill (Kanzellator)\\
+
+\aufgabe{Aufgabe}\punkte{6}
+\textit{$\lambda$x.y(xy) $\equiv$ S(K y)(SI(K y))}\\
+$\lambda$x.y(xy) $\stackrel{6}{\Rightarrow}$  (S T[$\lambda$x.y] T[$\lambda$x.(xy)]) $\stackrel{4}{\Rightarrow}$ (S (K T[y]) T[$\lambda$x.(xy)]) $\stackrel{1}{\Rightarrow}$ (S (K y) T[$\lambda$x.(xy)]) $\stackrel{6}{\Rightarrow}$ (S (K y) (S T[$\lambda$x.x] T[$\lambda$x.y])) $\stackrel{3}{\Rightarrow}$ (S (K y) (S I T[$\lambda$x.y])) $\stackrel{4}{\Rightarrow}$ (S (K y) (S I (K T[y]))) $\stackrel{1}{\Rightarrow}$ (S (K y) (S I (K y)))\\
+$\Rightarrow$ \textit{S(K y)(SI(K y)}
+\newpage
+\aufgabe{Aufgabe}\punkte{6}
+\textit{$\lambda$s.$\lambda$x.s(s(s(x))) $\equiv$ (S(S(KS)K)(S(S(KS)K)I))}\\
+Seien a und b zwei beliebige Ausdrücke:\\
+$\lambda$s.$\lambda$x.s(s(s(x))) a b\\
+$\Leftrightarrow$ $\lambda$x.a(a(a(x))) b\\
+$\Leftrightarrow$ a(a(a(b)))\\
+\newline
+\newline
+(S(S(KS)K)(S(S(KS)K)I)) a b\\
+$\Rightarrow$(S(KS)K)a((S(S(KS)K)I))a) b               \hfill (Funktionsapplikation))\\
+$\Rightarrow$((KS)a(Ka))((S(S(KS)K)I))a) b              \hfill (Funktionsappliktaon)\\
+$\Rightarrow$(S(Ka))((S(S(KS)K)I))a) b                 \hfill (Kanzellator)\\
+$\Rightarrow$((Ka)b(((S(S(KS)K)I))a)b)                  \hfill (Funktionsapplikation)\\
+$\Rightarrow$(a(((S(S(KS)K)I))a)b)                     \hfill (Kanzellator)\\
+$\Rightarrow$(a((S(KS)K)a)I(Ia)b)                       \hfill (Funktionsapplikation)\\
+$\Rightarrow$(a((KS)a(Ka)I(Ia)b)                        \hfill (Funktionsapplikation)\\
+$\Rightarrow$(a(S(Ka)I(Ia)b)                           \hfill (Kanzellator)\\
+$\Rightarrow$(a((Ka)(Ia)(I(Ia)))b)                      \hfill (Funktionsapplikation)\\
+$\Rightarrow$(a(a(I(Ia))b)                             \hfill (Kanzellator)\\
+$\Rightarrow$(a(a(Ia)b))                                \hfill (Identität)\\
+$\Rightarrow$(a(a(a(b)))                               \hfill (Identität)\\
+\textbf{Die Ausdrücke sind äquivalent}
+
+
+\aufgabe{Aufgabe}\punkte{8}\\
+\begin{lstlisting}
+ski_parser :: String -> Expr
+ski_parser str = parse Nil str
+
+
+parse :: Expr -> String -> Expr
+parse Nil [] = emptyExpr
+parse expr [] = expr
+
+parse Nil ('(':rest) = parse (parse Nil inside) out
+                            where (inside, out) = extract [] rest 0
+
+parse expr (')':rest) = parse expr rest
+
+parse Nil (a:rest) | letter a = parse (Var [a]) rest
+                   | ((length rest) == 0) = (char2Exp a)
+
+
+parse Nil (a:b:rest) 
+| ((expression a) && (expression b)) 
+= parse (App (char2Exp a) (char2Exp b)) rest
+                     
+| ((expression a) && (letter b)) = parse (App (char2Exp a) (Var [b])) rest
+                     
+| ((letter a) && (expression b)) = parse (App (Var [a]) (char2Exp b)) rest
+                     
+| ((letter a) && (letter b)) = parse (App (Var [a]) (Var [b])) rest
+| otherwise = parse (Var [a]) (b:rest)
+
+parse expr ('(':rest) = parse (App expr (parse Nil inside)) out
+                            where (inside, out) = extract [] rest 0
+
+parse expr (a:rest) | (expression a) = parse (App expr (char2Exp a)) rest
+
+parse expr rest = illegalExpr rest
+
+char2Exp :: Char -> Expr
+char2Exp 'S' = S
+char2Exp 'K' = K
+char2Exp 'I' = I
+
+expression :: Char -> Bool
+expression x = (x == 'S') || (x == 'I') || (x == 'K')
+
+emptyExpr = error "the empty expression is not a valid SKI-Expression"
+notAnumber = error "an empty string is not a number"
+illegalExpr str = error ("there is a syntax error in the expression  " ++ str)
+\end{lstlisting}
+
+\end{enumerate}
+\end{document}
