@@ -44,4 +44,4 @@ Mein gesamter Code steht unter der AGPL 3.0 Lizenz zur verfügung. Das heißt, d
 ### 20/28 Punkte
 
 ## Aufgabe 13
-### 30/30
+### 30/30 Punkte
